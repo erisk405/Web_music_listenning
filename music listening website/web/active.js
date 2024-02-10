@@ -14,7 +14,8 @@ resizeButton.addEventListener('click', () => {
 });
 
 
-
+            
+            
 
 // ------------------------------------------------------
 //  ปุ่มกดไปด้านข้าง (เพื่อให้ลูกศรหมุน) ใน ส่วนของ  My Library
@@ -82,6 +83,21 @@ function handleButtonClick(event) {
       Goto_page_list.classList.remove('active');
       Goto_search_page.classList.remove('active');
       insite_upload_page.classList.remove('active');
+     
+      fetch("../API/Data_playlist.php")
+      .then(Response =>{
+        if(!Response.ok){
+          throw new Error("fetch is error on active Homepage for update")
+        }
+        return Response.json();
+      })
+      .then(update =>{
+        updateThumbnail(update);
+        updateDotTitle(update);
+      })
+      .catch(error=>{
+        console.error("Error",error)
+      });
     }
     if(Search_page.classList.contains("active")){
       Goto_search_page.classList.add('active')

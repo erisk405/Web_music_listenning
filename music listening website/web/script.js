@@ -158,6 +158,10 @@ const MusicPlayer = {    // funtion เหล่านี้เป็น media �
     if(playlist_id_onGlobal === NowPlayingListSong){
       playingStateList();
     }
+    
+    resetBtn();
+    Btn_follow_Midia();
+    ResetBtn_Allactions(ClassListofButtonplaylist);
     loadMusicOnplaylist(musicIndex,OnplaylistSong);
     this.playMusic();
     playingNow();
@@ -173,6 +177,10 @@ const MusicPlayer = {    // funtion เหล่านี้เป็น media �
     if(playlist_id_onGlobal === NowPlayingListSong){
       playingStateList();
     }
+    
+    resetBtn();
+    Btn_follow_Midia();
+    ResetBtn_Allactions(ClassListofButtonplaylist);
     loadMusicOnplaylist(musicIndex,OnplaylistSong);
     this.playMusic();
     playingNow();
