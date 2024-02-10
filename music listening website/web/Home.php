@@ -184,7 +184,7 @@ while($row = $result_song -> fetch_assoc()){
                     <div class="main_site-right active">
                         <div class="wrapper">
                             <div class="item-box">
-                                <div class="content">
+                                <div class="content User">
                                     <h1>Good afternoon</h1>
                                     <div class="all-in-list">
                                         <div class="box">
