@@ -1,0 +1,77 @@
+SELECT ssn,CONCAT(fname," ",lname)AS NAME,bdate,YEAR(SYSDATE())-YEAR(bdate)AS age
+FROM employee
+
+SELECT DISTINCT(dno) FROM employee
+
+SELECT * FROM employee WHERE fname LIKE "_____"
+
+
+SELECT ssn,fname,dname FROM employee AS e,department AS d WHERE e.dno = d.dnumber
+
+INNER JOIn  
+SELECT ssn,fname,dname FROM employee AS e INNER JOIN department AS d ON  e.dno = d.dnumber
+
+
+SELECT * FROM project ORDER BY pnumber 
+
+1
+SELECT fname , salary FROM employee WHERE salary>30000 ORDER BY salary
+
+2
+SELECT fname , salary FROM employee WHERE ssn=987987987
+
+3
+SELECT lname FROM employee WHERE dno=1
+
+4
+SELECT * ,YEAR(SYSDATE())-YEAR(bdate)AS age
+FROM employee WHERE dno=7
+
+5
+SELECT fname,address FROM employee WHERE YEAR(bdate)<1965 and salary<70000
+
+6
+SELECT fname,address FROM employee WHERE YEAR(bdate)<1965 AND salary BETWEEN 50000 and 70000 
+
+7
+SELECT fname,salary,ROUND(salary*105/100,2) as newsalary FROM employee 
+
+8
+SELECT dname, dlocation 
+FROM department 
+INNER JOIN dept_locations ON department.dnumber = dept_locations.dnumber 
+WHERE dept_locations.dlocation IN  ('Houston', 'Atlanta', 'Dallas', 'Sacramento');
+
+
+9
+SELECT fname,lname FROM employee WHERE lname LIKE "_a%" AND  lname LIKE "%l%" ORDER BY fname,lname
+
+10
+INSERT INTO department VALUES("Accounting",10,"222222200","1980-06-01") 
+
+11
+INSERT INTO employee(fname,lname,ssn,dno) VALUE("Jack","Bloom","222222222",6);
+ROLLBACK
+
+12
+DELETE FROM dept_locations WHERE dnumber= 5 AND dlocation IN ('Sugarland');
+ROLLBACK
+
+
+13
+START TRANSACTION;
+DELETE works_on
+FROM works_on
+INNER JOIN employee ON works_on.essn = employee.ssn
+WHERE fname = 'Joyce' AND minit = 'A' AND lname = 'English';
+ROLLBACK;
+END TRANSACTION;
+
+
+SELECT fname
+FROM employee,project,works_on 
+WHERE 
+
+
+UPDATE employee SET salary = salary*1.1 
+ROLLBACK
