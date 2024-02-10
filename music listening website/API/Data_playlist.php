@@ -13,7 +13,8 @@ if (isset($_GET['category_id'])) {
         }
         echo json_encode($data);
     } else {
-        echo "0 results";
+        $data = array();
+        echo json_encode($data);
     }
     $conn->close();
 }
@@ -28,7 +29,8 @@ if (isset($_GET['playlist_id'])) {
         }
         echo json_encode($data);
     } else {
-        echo "0 results";
+        $data = array();
+        echo json_encode($data);
     }
     $conn->close();
 }

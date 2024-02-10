@@ -1371,3 +1371,4 @@ function triggerOpen(){
       overlay.addEventListener('click',openData);
   };
 }
+triggerOpen();

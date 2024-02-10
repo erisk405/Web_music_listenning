@@ -17,7 +17,6 @@ function addPlaylist(category_id) {
     },
     body: JSON.stringify({ //ในส่วนจะส่งไปแค่นี้ เพื่อให้สร้างแค่ playlist เปล่าๆมา จากนั้นค่อยไปเพิ่มฟังชั่นในการแก้ไขทีหลัง
       user_id: "1", // id admin
-      playlist_name: "playlist",
       category_id: `${category_id}`,
     }),
   })
@@ -38,11 +37,12 @@ function addPlaylist(category_id) {
       carousel_item_normal.innerHTML = ""; //เพื่อนำไปแสดงผลได้เลยโดยไม่ต้องrefresh webpage 
       data.forEach((item) => {
         const playlistImage = item.playlist_image ? `../img_playlist/${item.playlist_image}` : '../img_playlist/music-icon.jpg';
+        const dot_title = item.playlist_name ? item.playlist_name : `playlist`+`${item.playlist_id}`
         let carousel_playlist = `  <div class="carousel-item swiper-slide">
                                     <a href="#" class="product-permalink" playlist_id ="${item.playlist_id}"></a>
                                     <div class="dot-image">
                                       <div class="thumbnail">
-                                        <img src="${playlistImage}" alt="">
+                                        <img playlist_id="${item.playlist_id}" src="${playlistImage}" alt="">
                                       </div>
                                       <div class="actions" actions_Playlist_id = "${item.playlist_id}">
                                         <ul>
@@ -51,7 +51,7 @@ function addPlaylist(category_id) {
                                       </div>
                                     </div>
                                     <div class="dot-info">
-                                      <h3 class="dot-title"><a href="">${item.playlist_name + item.playlist_id}</a></h3>
+                                      <h3 class="dot-title"><a href="#" playlist_id="${item.playlist_id}">${dot_title}</a></h3>
                                     <div class="dot-detail">
                                       <span class="before">This playlist create for</span>
                                     </div>
@@ -67,6 +67,7 @@ function addPlaylist(category_id) {
     });
 }
 function fetchInitialData(category_id) {  //ง่ายๆเลยคือ  addPlaylist() เก็บข้อมูลเข้าไป fetchInitialData() ใช้เพื่อแสดงผลตอนที่เราload webpage
+  console.log(category_id)
   return new Promise((resolve, reject) => {
     const displayData = document.getElementById(`wrapper-playlist${category_id}`),
       carousel_item = displayData.querySelector(".wrapper.swiper-wrapper");
@@ -79,35 +80,38 @@ function fetchInitialData(category_id) {  //ง่ายๆเลยคือ  a
       })
       .then((data) => {
         console.log(data)
-        // แสดงข้อมูลเริ่มต้นที่ได้จากฐานข้อมูล
-        data.forEach((item) => {
-          const playlistImage = item.playlist_image ? `../img_playlist/${item.playlist_image}` : '../img_playlist/music-icon.jpg';
-          let carousel_playlist = `<div class="carousel-item swiper-slide">
-                                    <a href="#" class="product-permalink" playlist_id ="${item.playlist_id}"></a>
-                                    <div class="dot-image">
-                                      <div class="thumbnail">
-                                        <img src="${playlistImage}" playlist_id="${item.playlist_id}" alt="">
+        if (data.length > 0) {
+          // แสดงข้อมูลเริ่มต้นที่ได้จากฐานข้อมูล
+          data.forEach((item) => {
+            const playlistImage = item.playlist_image ? `../img_playlist/${item.playlist_image}` : '../img_playlist/music-icon.jpg';
+            const dot_title = item.playlist_name ? item.playlist_name : `playlist`+`${item.playlist_id}`
+            let carousel_playlist = `<div class="carousel-item swiper-slide">
+                                      <a href="#" class="product-permalink" playlist_id ="${item.playlist_id}"></a>
+                                      <div class="dot-image">
+                                        <div class="thumbnail">
+                                          <img src="${playlistImage}" playlist_id="${item.playlist_id}" alt="">
+                                        </div>
+                                        <div class="actions" actions_playlist_id = "${item.playlist_id}">
+                                          <ul>
+                                            <li><a href="#"><i class="ri-play-fill"></i></a></li>
+                                          </ul>
+                                        </div>
                                       </div>
-                                      <div class="actions" actions_playlist_id = "${item.playlist_id}">
-                                        <ul>
-                                          <li><a href="#"><i class="ri-play-fill"></i></a></li>
-                                        </ul>
+                                      <div class="dot-info">
+                                        <h3 class="dot-title"><a href="#" playlist_id="${item.playlist_id}">${dot_title}</a></h3>
+                                      <div class="dot-detail">
+                                        <span class="before">This playlist create for</span>
                                       </div>
                                     </div>
-                                    <div class="dot-info">
-                                      <h3 class="dot-title"><a href="#" playlist_id="${item.playlist_id}">${item.playlist_name}</a></h3>
-                                    <div class="dot-detail">
-                                      <span class="before">This playlist create for</span>
-                                    </div>
-                                  </div>
-                                 </div>`;
-          carousel_item.insertAdjacentHTML("beforeend", carousel_playlist);
-        });
-        resolve();
-
+                                  </div>`;
+            carousel_item.insertAdjacentHTML("beforeend", carousel_playlist);
+          });
+          resolve();
+        } else {
+          resolve();
+        }
       })
       .catch((error) => {
-        reject();
         console.error("Error:", error);
       });
   });
@@ -581,6 +585,7 @@ function fetchInitialDataCategory() { //function ที่ใช้ในกา�
         }
       })
       data.forEach((content) => {
+        console.log(content)
         let category_header = `<div class="content" id="wrapper-playlist${content.category_id}">
                                     <div class="content-header">
                                         <h2>${content.category_name}</h2>
@@ -640,88 +645,7 @@ function fetchInitialDataCategory() { //function ที่ใช้ในกา�
           if (!fetchPermalinkCalled) {
             fetchPermalinkCalled = true;
             fetchInitialPermalink();// เรียกใช้ fetchInitialPermalink() เมื่อทุก Promise เสร็จสมบูรณ์
-
-            // -----------------------------------------------------------------------------
-            // ส่วนนี้จะเป็นของปุ่มplay ที่อยู่ด้านในของ playlist แต่ละตัว เป็นแค่การแสดงผลเมื่อมีการคลิกเฉยๆ
-            // -----------------------------------------------------------------------------
-            const Allactions_playlist = document.querySelectorAll('.actions');
-            Allactions_playlist.forEach(actions_playlist => {
-              actions_playlist.addEventListener('click', () => {
-                fetch('../API/API_playlist_song.php')
-                  .then(response => {
-                    if (!response.ok) {
-                      throw new Error("Network response from Allactions_playlist was not ok")
-                    }
-                    return response.json();
-                  })
-                  .then(data_action => {
-                    const playlist_id_local = actions_playlist.getAttribute("actions_Playlist_id");
-                    const SongOfPlaylist = data_action.filter(data_playlist => data_playlist.playlist_id === `${playlist_id_local}`) // จากนั้นก็กรองด้วย filter 
-
-
-                    OnplaylistSong = []; // ต้องเคลียร์ array ก่อน push ค่าเข้าไป
-                    const sortedSongs = SongOfPlaylist.map(playlistItem => {  // นำ song_id ที่อยู่ใน SongOfPlaylist  เพื่อกรอง array Allmusic ให้มีแค่ เพลงของ playlistนั้นๆ 
-                      const foundSong = allMusic.find(song => song.song_id === playlistItem.song_id); //และที่ต้องใช้ Map เนื่องจากมัน Return ค่ากลับมาได้
-                      OnplaylistSong.push(foundSong); // ต้องเก็บใว้ใน Array ที่เป็น global
-                      return foundSong;
-                    });
-                    console.log(sortedSongs)
-                    ClassListofButtonplaylist = ''; // ต้องใช้เพื่อเช็คจะส่ง  actions_playlist เพื่อใช้งาน function ToggleBtn_Allactions ที่อยู่ใน playPauseBtn
-                    ClassListofButtonplaylist = actions_playlist;
-                    if (sortedSongs.length === 0) {
-                        alert("ไม่มีเพลงใน playlist ไปAddก่อนโว้ยยย")
-                        console.log("ไม่มีเพลงใน playlist");
-                        // แจ้งเตือนหรือแสดงข้อความบน UI เพื่อแจ้งให้ผู้ใช้ทราบว่าไม่มีเพลงใน playlist
-                    } else {
-                        // กระบวนการปกติเมื่อมีเพลงใน playlist
-                        ClassListofButtonplaylist = ''; 
-                        ClassListofButtonplaylist = actions_playlist;
-                        let countSong = 1;
-                        musicIndex = 1; 
-                        if (playlist_id_local !== NowPlayingListSong) {
-                            Taglist.innerHTML = '';
-                            isSpecialCondition = false; 
-                            isPlaylistCondition = true;
-                            sortedSongs.forEach((music, i) => {
-                                NowPlayingListSong = [];
-                                NowPlayingListSong = playlist_id_local;
-                                let boxlist = `<div class="box-list" box-index="${countSong}" artist_name="${music.artist}" playlist_id="${playlist_id_local}"> 
-                                                <a href="#" class="for-select"></a>
-                                                <audio class="${music.src}" id="NOW${music.src}" src="../music/${music.src}"></audio>
-                                                <div class="playing"></div>
-                                                <div class="dot-image">               
-                                                    <img src="../img_song/${music.img}" alt="">
-                                                </div>
-                                                <div class="detail">
-                                                    <label for="">${music.name}</label>
-                                                    <span>${music.artist}</span>
-                                                </div>
-                                              </div>`;
-                                Taglist.insertAdjacentHTML("beforeend", boxlist);
-                                countSong++;
-                            });
-                            resetBtn();
-                            playingNow(); 
-                            updateImageQueue(OnplaylistSong); 
-                            loadMusicOnplaylist(musicIndex, OnplaylistSong)
-                            MusicPlayer.playMusic();
-                            ToggleBtn_Allactions(ClassListofButtonplaylist); 
-                        } else {
-                            isMusicPaused = music_box.classList.contains("paused");
-                            isMusicPaused ? MusicPlayer.pauseMusic() : MusicPlayer.playMusic();
-                            togglePlayStop();
-                            ToggleBtn_Allactions(ClassListofButtonplaylist); 
-                        }
-                    }
-                    
-
-                  })
-                  .catch((error) => {
-                    console.error("Error:", error);
-                    alert("There was a problem fetching Allactions data.")
-                  });
-              });
-            });
+            SetupActionsPlaylists();
 
           }
         })
@@ -914,6 +838,7 @@ function fetchAddSongPlaylist(playlist_id) {//เหมือนกับ fetchI
 }
 function fetchInitialPermalink() { /// function ที่ใช้เพื่อ showข้อมูลภายในหน้านั้นๆ
   let playlist_id_local = '';
+  console.log(playlist_id_local)
   const product_permalink_common = document.querySelectorAll(".product-permalink:not(.artist)");
   const Setting_detail_main = document.querySelector('.Setting-detail-main');
   console.log(product_permalink_common)
@@ -1008,17 +933,17 @@ function fetchInitialPermalink() { /// function ที่ใช้เพื่�
 
           const Delete_confirm = document.querySelector('.Delete-song-popup-onlist .Delete-confirm');
           Delete_confirm.innerHTML = '';
-          let Delete_confirm_var =  `
+          let Delete_confirm_var = `
                                     <form>
                                         <a href="#" class="cancel-confirm" close-button >Cancle</a>
                                         <button class="delete-song-playlist">Confirm</button>
                                     </form>`;
-          Delete_confirm.insertAdjacentHTML("beforeend",Delete_confirm_var)                
+          Delete_confirm.insertAdjacentHTML("beforeend", Delete_confirm_var)
           const delete_song_playlist = document.querySelector('.delete-song-playlist');
-          delete_song_playlist.addEventListener('click',() =>{
+          delete_song_playlist.addEventListener('click', () => {
             DeletePlaylist(playlist_id_local) // ส่งค่าไปเมื่อจะทำการลบ Playlist นั้นๆ
           });
-          
+
           triggerOpen();
           upload_img_custum_detail(); // function ที่ใช้ในการ upload file รูป มาจาก active.js line 327
 
@@ -1256,23 +1181,23 @@ function DeletePlaylistSong(playlist_id, song_id) {
 function DeletePlaylist(playlist_id) {
   const BTN_HOME = document.getElementById('home');
   let formData = new FormData();
-  formData.append("playlist_id",playlist_id)
-  fetch("../API/Delete_Playlist.php",{
+  formData.append("playlist_id", playlist_id)
+  fetch("../API/Delete_Playlist.php", {
     method: 'POST',
     body: formData
   })
-  .then(response =>{
-    if(!response.ok){
-      throw new Error("Network response was not ok on DeletePlaylist")
-    }
-    response.text();
-    fetchInitialDataCategory();
-    BTN_HOME.click();
-    close_Delete_playlist_popup();
-  })
-  .catch(error =>{
-    console.error('There was an error!',error)
-  });
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok on DeletePlaylist")
+      }
+      response.text();
+      fetchInitialDataCategory();
+      BTN_HOME.click();
+      close_Delete_playlist_popup();
+    })
+    .catch(error => {
+      console.error('There was an error!', error)
+    });
 }
 
 function sortedSongsToPlaylist(SongOfPlaylist, playlist_id_local) {// กรองเพลงลงไปใน playlist
@@ -1587,11 +1512,13 @@ function updateBannerHeaderplaylist(playlist_id) {
       console.log(data[0]);
       const In_Name_detail = document.getElementById('In-Name-detail');
       const playlistImage = data[0].playlist_image ? `../img_playlist/${data[0].playlist_image}` : '../img_playlist/music-icon.jpg';
+      const dot_title = data[0].playlist_name ? data[0].playlist_name : `playlist`+`${data[0].playlist_id}`
+
       const img_forShow = document.querySelector('.img-forShow');
       if (img_forShow) {
-          img_forShow.setAttribute("src", playlistImage);
+        img_forShow.setAttribute("src", playlistImage);
       } else {
-          console.error("Element with class .img-forShow not found.");
+        console.error("Element with class .img-forShow not found.");
       }
       In_Name_detail.value = data[0].playlist_name;
 
@@ -1600,8 +1527,8 @@ function updateBannerHeaderplaylist(playlist_id) {
         const playlistImage = content.playlist_image ? `../img_playlist/${content.playlist_image}` : '../img_playlist/music-icon.jpg';
         let someListImage = `<img src="${playlistImage}">`;
         let somePlaylist_title = `<p>playlist</p>
-                                <h1 class="artist">${content.playlist_name}</h1>
-                                <p class="associate-artist">${content.playlist_name}, Musketeers ,follow and more</p>
+                                <h1 class="artist">${dot_title}</h1>
+                                <p class="associate-artist">${dot_title}, Musketeers ,follow and more</p>
                                 <div class="detail">
                                     <i class="ri-music-fill"></i>Spotify
                                     <span>•</span>
@@ -1620,18 +1547,107 @@ function updateBannerHeaderplaylist(playlist_id) {
 // ไว้สำหรับอัพเดทรูป ถูกเรียกใช้ที่ Homepage active handleButtonClick active.js line 72
 const updateThumbnail = update => {
   document.querySelectorAll('.thumbnail > img').forEach(content => {
-      const filteredData = update.find(data => data.playlist_id === content.getAttribute("playlist_id"));
-      if (filteredData) {
-          content.setAttribute("src", `../img_playlist/${filteredData.playlist_image}`);
-      }
+    const filteredData = update.find(data => data.playlist_id === content.getAttribute("playlist_id"));
+    if (filteredData) {
+      const playlistImage = filteredData.playlist_image ? `../img_playlist/${filteredData.playlist_image}` : '../img_playlist/music-icon.jpg';
+      content.setAttribute("src", playlistImage);
+    }
   });
 };
 // ไว้สำหรับอัพเดพชื่อ Playlist ถูกเรียกใช้ที่ Homepage active handleButtonClick active.js line 72
 const updateDotTitle = update => {
   document.querySelectorAll('.dot-title > a[playlist_id]').forEach(content => {
-      const filteredData = update.find(data => data.playlist_id === content.getAttribute("playlist_id"));
-      if (filteredData) {
-          content.textContent = filteredData.playlist_name;
-      }
+    const filteredData = update.find(data => data.playlist_id === content.getAttribute("playlist_id"));
+    const dot_title = filteredData.playlist_name ? filteredData.playlist_name : `playlist`+`${filteredData.playlist_id}`
+
+    if (dot_title) {
+      content.textContent = dot_title;
+    }
   });
 };
+
+
+
+function SetupActionsPlaylists(){
+// -----------------------------------------------------------------------------
+// ส่วนนี้จะเป็นของปุ่มplay ที่อยู่ด้านในของ playlist แต่ละตัว เป็นแค่การแสดงผลเมื่อมีการคลิกเฉยๆ
+// -----------------------------------------------------------------------------
+const Allactions_playlist = document.querySelectorAll('.actions');
+Allactions_playlist.forEach(actions_playlist => {
+  actions_playlist.addEventListener('click', () => {
+    fetch('../API/API_playlist_song.php')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("Network response from Allactions_playlist was not ok")
+        }
+        return response.json();
+      })
+      .then(data_action => {
+        const playlist_id_local = actions_playlist.getAttribute("actions_Playlist_id");
+        const SongOfPlaylist = data_action.filter(data_playlist => data_playlist.playlist_id === `${playlist_id_local}`) // จากนั้นก็กรองด้วย filter 
+
+
+        OnplaylistSong = []; // ต้องเคลียร์ array ก่อน push ค่าเข้าไป
+        const sortedSongs = SongOfPlaylist.map(playlistItem => {  // นำ song_id ที่อยู่ใน SongOfPlaylist  เพื่อกรอง array Allmusic ให้มีแค่ เพลงของ playlistนั้นๆ 
+          const foundSong = allMusic.find(song => song.song_id === playlistItem.song_id); //และที่ต้องใช้ Map เนื่องจากมัน Return ค่ากลับมาได้
+          OnplaylistSong.push(foundSong); // ต้องเก็บใว้ใน Array ที่เป็น global
+          return foundSong;
+        });
+        console.log(sortedSongs)
+        ClassListofButtonplaylist = ''; // ต้องใช้เพื่อเช็คจะส่ง  actions_playlist เพื่อใช้งาน function ToggleBtn_Allactions ที่อยู่ใน playPauseBtn
+        ClassListofButtonplaylist = actions_playlist;
+        if (sortedSongs.length === 0) {
+          alert("ไม่มีเพลงใน playlist ไปAddก่อนโว้ยยย")
+          console.log("ไม่มีเพลงใน playlist");
+          // แจ้งเตือนหรือแสดงข้อความบน UI เพื่อแจ้งให้ผู้ใช้ทราบว่าไม่มีเพลงใน playlist
+        } else {
+          // กระบวนการปกติเมื่อมีเพลงใน playlist
+          ClassListofButtonplaylist = '';
+          ClassListofButtonplaylist = actions_playlist;
+          let countSong = 1;
+          musicIndex = 1;
+          if (playlist_id_local !== NowPlayingListSong) {
+            Taglist.innerHTML = '';
+            isSpecialCondition = false;
+            isPlaylistCondition = true;
+            sortedSongs.forEach((music, i) => {
+              NowPlayingListSong = [];
+              NowPlayingListSong = playlist_id_local;
+              let boxlist = `<div class="box-list" box-index="${countSong}" artist_name="${music.artist}" playlist_id="${playlist_id_local}"> 
+                                                <a href="#" class="for-select"></a>
+                                                <audio class="${music.src}" id="NOW${music.src}" src="../music/${music.src}"></audio>
+                                                <div class="playing"></div>
+                                                <div class="dot-image">               
+                                                    <img src="../img_song/${music.img}" alt="">
+                                                </div>
+                                                <div class="detail">
+                                                    <label for="">${music.name}</label>
+                                                    <span>${music.artist}</span>
+                                                </div>
+                                              </div>`;
+              Taglist.insertAdjacentHTML("beforeend", boxlist);
+              countSong++;
+            });
+            resetBtn();
+            playingNow();
+            updateImageQueue(OnplaylistSong);
+            loadMusicOnplaylist(musicIndex, OnplaylistSong)
+            MusicPlayer.playMusic();
+            ToggleBtn_Allactions(ClassListofButtonplaylist);
+          } else {
+            isMusicPaused = music_box.classList.contains("paused");
+            isMusicPaused ? MusicPlayer.pauseMusic() : MusicPlayer.playMusic();
+            togglePlayStop();
+            ToggleBtn_Allactions(ClassListofButtonplaylist);
+          }
+        }
+
+
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        alert("There was a problem fetching Allactions data.")
+      });
+  });
+});
+}
