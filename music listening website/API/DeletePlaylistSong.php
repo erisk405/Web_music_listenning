@@ -1,6 +1,6 @@
 <?php 
 include("../web/connection.php");
-if ($_SERVER["REQUEST_METHOD"] == "POST" and  isset($_POST['playlist_id'])) {
+if ($_SERVER["REQUEST_METHOD"] == "POST" and isset($_POST['playlist_id'])) {
     $playlist_id = $_POST['playlist_id'];
     $song_id = $_POST['song_id'];
 

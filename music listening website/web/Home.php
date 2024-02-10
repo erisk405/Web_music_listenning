@@ -783,7 +783,7 @@ while($row = $result_song -> fetch_assoc()){
 
     <div class="Delete-song-popup-onlist" id="Delete-song-popup-onlist">
         <div class="header-delete">
-            <h2>Delete song out of playlist?</h2>
+            <h2>Delete playlist?</h2>
             <p>You insist to Delete <span>On playList</span>, right?</p>
         </div>
         <div class="Delete-confirm">

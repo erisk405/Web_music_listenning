@@ -351,6 +351,7 @@ function upload_img_custum_detail(){
     reader.onload = () => {
       const imgUrl = reader.result;
       const img = document.createElement('img');
+      img.classList.add('img-forShow');
       img.src = imgUrl;
       // Remove existing image (if any) before appending a new one
       const existingImage = custum_playlist_upload.querySelector('img');
