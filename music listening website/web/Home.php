@@ -813,7 +813,7 @@ while($row = $result_song -> fetch_assoc()){
             <p>You insist to Delete <span>On category</span>, right?</p>
         </div>
         <div class="Delete-confirm">
-            <form>
+            <form class="form-Delete-confirm">
                 <a href="#" class="cancel-confirm" close-button >Cancle</a>
                 <button class="Delete-category-btn">Confirm</button>
             </form>

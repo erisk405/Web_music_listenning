@@ -661,17 +661,30 @@ function fetchInitialDataCategory() { //function ที่ใช้ในกา�
       //          การทำงานในส่วนของการค่าลบ Category 
       // ------------------------------------------------------------
       const Go_to_Delete_category = document.querySelectorAll('#Go-to-Delete-category');
+      const form_Delete_confirm = document.querySelector('.form-Delete-confirm');
       Go_to_Delete_category.forEach(content =>{
         content.addEventListener('click',()=>{
           const category_id = content.getAttribute("category_id")
           const wrapper_playlist = document.querySelector(`#wrapper-playlist${category_id}`);
-          console.log(content)
+          form_Delete_confirm.innerHTML = '';
+          let form_Delete_confirm_var = `
+                                    <a href="#" class="cancel-confirm" close-button >Cancle</a>
+                                    <button class="Delete-category-btn">Confirm</button>`;
+          form_Delete_confirm.insertAdjacentHTML("beforeend",form_Delete_confirm_var)                         
           
           const Delete_category_btn = document.querySelector(".Delete-category-btn");
           Delete_category_btn.addEventListener('click',()=>{
-            console.log(Delete_category_btn)
-            DeleteCategory(category_id)
-            wrapper_playlist.remove();
+            console.log(Delete_category_btn);
+            DeleteCategory(category_id);
+
+            // Check if wrapper_playlist contains carousel-item before removing
+            if (wrapper_playlist.querySelector('.carousel-item')) {
+                alert("ยังมีplaylistอยู่ในcategoryนี้ ไม่สามารถลบได้")
+                console.log("Wrapper playlist does not contain carousel-item. Not removing.");
+            } else {
+                wrapper_playlist.remove();
+            }
+
             closeDelete_category();
           })
         })
