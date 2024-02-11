@@ -79,7 +79,6 @@ function fetchInitialData(category_id) {  //ง่ายๆเลยคือ  a
         return response.json(); // แปลงข้อมูลที่ได้รับเป็น JSON
       })
       .then((data) => {
-        console.log(data)
         if (data.length > 0) {
           // แสดงข้อมูลเริ่มต้นที่ได้จากฐานข้อมูล
           data.forEach((item) => {
@@ -572,13 +571,6 @@ function fetchInitialDataCategory() { //function ที่ใช้ในกา�
   const item_box = container_button.querySelector('.item-box'); //  container_button มาจาก active.js  line 63
   const content_common = item_box.querySelectorAll('.content');
 
-  
-  // const main_site_right = document.querySelector('.main_site-right :is(.content:not(.artist),.content:not(.User))')
-  // main_site_right.style.display = "none";
-  // setTimeout(()=>{
-  //   main_site_right.style.display = "block";
-  // },500)
-
   fetch("../API/Data_category.php")
     .then((response) => {
       if (!response.ok) {
@@ -590,7 +582,6 @@ function fetchInitialDataCategory() { //function ที่ใช้ในกา�
       data.sort((a, b) => a.category_id - b.category_id);
       content_common.forEach((contentElement, index) => { // ทำไว้เพื่อให้มัน clear content.category ก่อนครั้งแรก
         if (index > 1) {
-          console.log(contentElement)
           contentElement.remove();
         }
       })
@@ -605,8 +596,8 @@ function fetchInitialDataCategory() { //function ที่ใช้ในกา�
                                               <div class="more-detail" id="more-detail${content.category_id}">
                                                   <div class="wrapper">
                                                       <a href="#" class="Add-playlist" id="Add-playlist${content.category_id}" category_id="${content.category_id}"><i class="ri-add-circle-line"></i><span>Add playlist</span></a>
-                                                      <a href="#" id="Edit-playlist"><i class="ri-edit-line"></i><span>Edit Name</span></a>
-                                                      <a href="#"><i class="ri-subtract-line"></i><span>Delete playlist</span></a>
+                                                      <a href="#" id="Edit-playlist" trigger-button data-target="Edit-catagory-popup" category_id="${content.category_id}" category_Name="${content.category_name}"><i class="ri-edit-line"></i><span>Edit Name</span></a>
+                                                      <a href="#" id="Go-to-Delete-category" category_id="${content.category_id}" trigger-button data-target="Delete-category" ><i class="ri-subtract-line"></i><span>Delete playlist</span></a>
                                                   </div>
                                               </div>
                                           </div>
@@ -631,6 +622,61 @@ function fetchInitialDataCategory() { //function ที่ใช้ในกา�
 
         item_box.insertAdjacentHTML("beforeend", category_header);
       });
+      // ------------------------------------------------------------
+      //          การทำงานในส่วนของการแก้ไขค่าของ Category 
+      // ------------------------------------------------------------
+      const Edit_playlist = document.querySelectorAll('#Edit-playlist');
+      const form_Edit_Name_catagory = document.querySelector('.form-Edit-Name-catagory');
+      Edit_playlist.forEach(content =>{
+        content.addEventListener('click', () => {
+          const category_id = content.getAttribute("category_id")
+          const wrapper_playlist = document.querySelector(`#wrapper-playlist${category_id}`);
+          form_Edit_Name_catagory.innerHTML = '';
+          let form_Edit_Name_catagory_var  = `
+                                              <label for="Edit-Name-catagory" class="wrapper Edit-Name-catagory" >
+                                                  <span>Name catagory</span>
+                                                  <input type="text" id="Edit-Name-catagory" placeholder="Input your catagory">
+                                              </label>
+                                              <p>this is  for create catagory when you want to create playlist</p>
+                                              <div class="catagory-btn">
+                                                  <button class="Edit-catagory-popup-btn">Save</button>
+                                              </div>`;
+          form_Edit_Name_catagory.insertAdjacentHTML("beforeend",form_Edit_Name_catagory_var)
+
+          
+          const Edit_catagory_popup_btn = document.querySelector('.Edit-catagory-popup-btn');
+          const Edit_Name_catagory = document.getElementById('Edit-Name-catagory')
+          Edit_Name_catagory.setAttribute("value",content.getAttribute("category_Name"))
+          Edit_catagory_popup_btn.addEventListener('click',() =>{
+            const content_header = wrapper_playlist.querySelector(".content-header > h2")
+            content_header.innerText = Edit_Name_catagory.value;
+
+            SaveEditNameCategory(category_id , Edit_Name_catagory.value);
+            closeEdit_category();
+          });
+        });
+      });
+
+      // ------------------------------------------------------------
+      //          การทำงานในส่วนของการค่าลบ Category 
+      // ------------------------------------------------------------
+      const Go_to_Delete_category = document.querySelectorAll('#Go-to-Delete-category');
+      Go_to_Delete_category.forEach(content =>{
+        content.addEventListener('click',()=>{
+          const category_id = content.getAttribute("category_id")
+          const wrapper_playlist = document.querySelector(`#wrapper-playlist${category_id}`);
+          console.log(content)
+          
+          const Delete_category_btn = document.querySelector(".Delete-category-btn");
+          Delete_category_btn.addEventListener('click',()=>{
+            console.log(Delete_category_btn)
+            DeleteCategory(category_id)
+            wrapper_playlist.remove();
+            closeDelete_category();
+          })
+        })
+      });
+
       // -----------------------------------------------------------------------------
       //      more_select หรือก็คือส่วนหน้าต่าง function ที่ใช้ในการ add-playlist ต่างๆนั้นแหละ
       // ----------------------------------------------------------------------------
@@ -654,6 +700,7 @@ function fetchInitialDataCategory() { //function ที่ใช้ในกา�
             fetchInitialPermalink();// เรียกใช้ fetchInitialPermalink() เมื่อทุก Promise เสร็จสมบูรณ์
             SetupActionsPlaylists();/// action play ของ playlist ที่ไม่ใช้ playlist Artist 
             initSwiper();
+            triggerOpen();
           }
         })
         .catch(error => {
@@ -675,8 +722,6 @@ function fetchInitialDataCategory() { //function ที่ใช้ในกา�
       alert("There was a problem fetching data.");
     });
 }
-const add_catagory_popup = document.querySelector('.add-catagory-popup');
-const catagory_btn = add_catagory_popup.querySelector('.catagory-btn button');
 function saveCatagory() {//เหมือนกับ fetchInitialData() นั่นแหละ แต่เป็นของ Playlist Artist 
   const nameCatagoryInput = document.getElementById('Name-catagory').value;
   const item_box = container_button.querySelector('.item-box'); //  มาจาก container_button line 63
@@ -1366,6 +1411,8 @@ function sortedSongsToPlaylist(SongOfPlaylist, playlist_id_local) {// กรอ�
 }
 
 
+const add_catagory_popup = document.querySelector('.add-catagory-popup');
+const catagory_btn = add_catagory_popup.querySelector('.catagory-btn button');
 const Select_artist_popup = document.getElementById('Select-artist-popup'),
   artist_box_content = Select_artist_popup.querySelector('.wrapper-box'),
   box_artist_playlist = artist_box_content.querySelectorAll('.box');
@@ -1415,6 +1462,10 @@ catagory_btn.addEventListener('click', function (even) {
 });
 
 
+// ----------------------------------------------------
+// ใช้สำหรับ popup ที่จะกดSave ของปุ่ม แล้วให้ปิดไปตามคำสั่ง
+// ----------------------------------------------------
+
 function closePopup_catagory_popup() {  // ใช้function เพื่อปิด popup catagory 
   const overlay = document.querySelector('.overlay');
   add_catagory_popup.classList.remove("active");
@@ -1432,7 +1483,22 @@ function closeSetting_detail_popup() {
   Setting_detail_popup.classList.remove("active");
   overlay.classList.remove("active");
 }
+function closeEdit_category(){
+  const Edit_catagory_popup =document.querySelector('.Edit-catagory-popup');
+  const overlay = document.querySelector('.overlay');
+  Edit_catagory_popup.classList.remove("active");
+  overlay.classList.remove("active");
+}
+function closeDelete_category(){
+  const Delete_category =document.querySelector('.Delete-category');
+  const overlay = document.querySelector('.overlay');
+  Delete_category.classList.remove("active");
+  overlay.classList.remove("active");
+}
 
+// ----------------------------------------------------
+// ใช้สำหรับ function ในการ update ค่าต่างๆ
+// ----------------------------------------------------
 
 function updateDateandTimeMusic(SongOfPlaylist) {
   const dateAddonElement = document.querySelectorAll(".Date-add-on-list");
@@ -1740,4 +1806,42 @@ function SetupActionsPlaylistsArtist() {
         });
     });
   });
+}
+
+
+
+function SaveEditNameCategory(category_id , category_name){
+  let formData = new FormData();
+  formData.append("category_id",category_id)
+  formData.append("category_name",category_name)
+  fetch("../API/Edit_category.php",{
+    method: 'POST',
+    body:formData
+  })
+  .then(response =>{
+    if(!response.ok){
+      throw new Error("Network response was not ok on SaveEditNameCategory")
+    }
+    response.text();
+  })
+  .catch(error =>{
+    console.error("Error",error)
+  })
+}
+function DeleteCategory(category_id){
+  let formData = new FormData();
+  formData.append("category_id",category_id)
+  fetch("../API/Delete_category.php",{
+    method:'POST',
+    body: formData
+  })
+  .then(response =>{
+    if(!response.ok){
+      throw new Error("Error was error on DeleteCategory")
+    }
+    response.text()
+  })
+  .catch(error =>{
+    console.error("Error",error)
+  })
 }

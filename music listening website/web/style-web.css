@@ -2804,13 +2804,15 @@ footer {
 .Delete-song-popup.active,
 .Delete-artist-popup.active,
 .Delete-select-popup.active ,
-.Delete-song-popup-onlist.active{
+.Delete-song-popup-onlist.active,
+.Delete-category.active{
   display: flex;
 }
 .Delete-song-popup,
 .Delete-artist-popup,
 .Delete-select-popup,
-.Delete-song-popup-onlist{
+.Delete-song-popup-onlist,
+.Delete-category{
   position: fixed;
   display: none;
   flex-direction: column;
@@ -2828,20 +2830,23 @@ footer {
 .Delete-song-popup .header-delete p,
 .Delete-artist-popup .header-delete p ,
 .Delete-select-popup .header-delete p,
-.Delete-song-popup-onlist .header-delete p{
+.Delete-song-popup-onlist .header-delete p,
+.Delete-category .header-delete p{
   margin: 0;
 }
 .Delete-song-popup .header-delete span,
 .Delete-artist-popup .header-delete span ,
 .Delete-select-popup .header-delete span,
-.Delete-song-popup-onlist .header-delete span{
+.Delete-song-popup-onlist .header-delete span,
+.Delete-category .header-delete span{
   color: rgb(255, 17, 33);
   /* text-decoration: underline; */
 }
 .Delete-song-popup .header-delete,
 .Delete-artist-popup .header-delete ,
 .Delete-select-popup .header-delete,
-.Delete-song-popup-onlist .header-delete{
+.Delete-song-popup-onlist .header-delete,
+.Delete-category .header-delete{
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -2852,13 +2857,15 @@ footer {
 .Delete-song-popup .Delete-confirm,
 .Delete-artist-popup .Delete-confirm ,
 .Delete-select-popup .Delete-confirm,
-.Delete-song-popup-onlist .Delete-confirm{
+.Delete-song-popup-onlist .Delete-confirm,
+.Delete-category .Delete-confirm{
   width: 100%;
 }
 .Delete-song-popup .Delete-confirm form,
 .Delete-artist-popup .Delete-confirm form ,
 .Delete-select-popup .Delete-confirm form,
-.Delete-song-popup-onlist .Delete-confirm form{
+.Delete-song-popup-onlist .Delete-confirm form,
+.Delete-category .Delete-confirm form{
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -2866,7 +2873,8 @@ footer {
 .Delete-song-popup .Delete-confirm form a:hover,
 .Delete-artist-popup .Delete-confirm form a:hover ,
 .Delete-select-popup .Delete-confirm form a:hover,
-.Delete-song-popup-onlist .Delete-confirm form a:hover{
+.Delete-song-popup-onlist .Delete-confirm form a:hover,
+.Delete-category .Delete-confirm form a:hover{
   text-decoration: underline;
   color: var(--red-color);
   scale: 1.05;
@@ -2874,13 +2882,15 @@ footer {
 .Delete-song-popup .Delete-confirm form a:active,
 .Delete-artist-popup .Delete-confirm form a:active ,
 .Delete-select-popup .Delete-confirm form a:active,
-.Delete-song-popup-onlist .Delete-confirm form a:active{
+.Delete-song-popup-onlist .Delete-confirm form a:active,
+.Delete-category .Delete-confirm form a:active{
   scale: 0.9;
 }
 .Delete-song-popup .Delete-confirm button,
 .Delete-artist-popup .Delete-confirm button ,
 .Delete-select-popup .Delete-confirm button,
-.Delete-song-popup-onlist .Delete-confirm button{
+.Delete-song-popup-onlist .Delete-confirm button,
+.Delete-category .Delete-confirm button{
   border: none;
   outline: none;
   padding: 5px 15px;
@@ -2889,31 +2899,36 @@ footer {
 
 .Delete-song-popup .close-btn:hover,
 .Delete-artist-popup .close-btn:hover ,
-.Delete-select-popup .close-btn:hover{
+.Delete-select-popup .close-btn:hover,
+.Delete-category .close-btn:hover{
   color: var(--red-color);
 }
 .Delete-song-popup .Delete-confirm button,
 .Delete-artist-popup .Delete-confirm button ,
 .Delete-select-popup .Delete-confirm button,
-.Delete-song-popup-onlist .Delete-confirm button{
+.Delete-song-popup-onlist .Delete-confirm button,
+.Delete-category .Delete-confirm button{
   transition: all 0.1s ease-in-out;
 }
 .Delete-song-popup .Delete-confirm button:hover,
 .Delete-artist-popup .Delete-confirm button:hover ,
 .Delete-select-popup .Delete-confirm button:hover,
-.Delete-song-popup-onlist .Delete-confirm button:hover{
+.Delete-song-popup-onlist .Delete-confirm button:hover,
+.Delete-category .Delete-confirm button:hover{
   scale: 1.05;
 }
 .Delete-song-popup .Delete-confirm button:active,
 .Delete-artist-popup .Delete-confirm button:active ,
 .Delete-select-popup .Delete-confirm button:active,
-.Delete-song-popup-onlist .Delete-confirm button:active{
+.Delete-song-popup-onlist .Delete-confirm button:active,
+.Delete-category .Delete-confirm button:active{
   scale: 0.9;
 }
 .Delete-song-popup .Delete-confirm button[type="submit"],
 .Delete-artist-popup .Delete-confirm button[type="submit"] ,
 .Delete-select-popup .Delete-confirm button[type="submit"],
-.Delete-song-popup-onlist .Delete-confirm button{
+.Delete-song-popup-onlist .Delete-confirm button,
+.Delete-category .Delete-confirm button{
   background-color: #1db954;
   color: white;
 }
@@ -3223,7 +3238,8 @@ input:hover {
 /*          add-catagory-popup          */
 /* ------------------------------------ */
 
-.add-catagory-popup{
+.add-catagory-popup,
+.Edit-catagory-popup{
   position: fixed;
   top: 50%;
   left: 50%;
@@ -3234,49 +3250,59 @@ input:hover {
   padding: 20px;
   z-index: 999;
 }
-.add-catagory-popup{
+.add-catagory-popup,
+.Edit-catagory-popup{
   display: none;
 }
-.add-catagory-popup.active{
+.add-catagory-popup.active,
+.Edit-catagory-popup.active{
   display: block;
 }
 
-.add-catagory-popup .wrapper{
+.add-catagory-popup .wrapper,
+.Edit-catagory-popup .wrapper{
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 15px 0;
 }
-.add-catagory-popup .wrapper input{
+.add-catagory-popup .wrapper input,
+.Edit-catagory-popup .wrapper input{
   outline: 0;
   border: none;
   background-color: var(--background-button);
   color: white;
   padding: 5px;
 }
-.add-catagory-popup .wrapper input::placeholder{
+.add-catagory-popup .wrapper input::placeholder,
+.Edit-catagory-popup .wrapper .input::placeholder{
   color: var(--grey-color2);
 }
-.add-catagory-popup .wrapper span{
+.add-catagory-popup .wrapper span,
+.Edit-catagory-popup .wrapper span{
   width: 200px;
 }
-.add-catagory-popup form .catagory-btn{
+.add-catagory-popup form .catagory-btn,
+.Edit-catagory-popup form .catagory-btn{
   display: flex;
   justify-content: flex-end;
   width: 100%;
 }
-.add-catagory-popup form .catagory-btn button{
+.add-catagory-popup form .catagory-btn button,
+.Edit-catagory-popup form .catagory-btn button{
   border: none;
   outline: none;
   border-radius: 20px;
   padding: 5px 20px;
 }
-.add-catagory-popup form p{
+.add-catagory-popup form p,
+.Edit-catagory-popup form p{
   color: var(--grey-color2);
   margin: 0;
   font-size: 12px;
 }
-.add-catagory-popup .close-btn{
+.add-catagory-popup .close-btn,
+.Edit-catagory-popup .close-btn{
   position: absolute;
   display: flex;
   justify-content: center;
@@ -3288,16 +3314,19 @@ input:hover {
   height: 30px;
   border-radius: 50%;
 }
-.add-catagory-popup .close-btn:hover{
+.add-catagory-popup .close-btn:hover,
+.Edit-catagory-popup .close-btn:hover{
   background-color: var(--background-button2);
 }
 
-.add-catagory-popup form .catagory-btn button:hover{
+.add-catagory-popup form .catagory-btn button:hover,
+.Edit-catagory-popup form .catagory-btn button:hover{
   scale: 1.05;
   transition: all .2s ease-in-out;
 }
 
-.add-catagory-popup form .catagory-btn button:active{
+.add-catagory-popup form .catagory-btn button:active,
+.Edit-catagory-popup form .catagory-btn button:active{
   scale: 0.95;
 }
 

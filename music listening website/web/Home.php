@@ -749,6 +749,20 @@ while($row = $result_song -> fetch_assoc()){
             </div>
         </form>
     </div>
+    <div class="Edit-catagory-popup" id="Edit-catagory-popup">
+        <a href="#" class="close-btn"><i class="ri-close-line" close-button></i></a>
+        <h2>Edit Catagory</h2>
+        <form action="" class="form-Edit-Name-catagory">
+            <label for="Edit-Name-catagory" class="wrapper Edit-Name-catagory" >
+                <span>Name catagory</span>
+                <input type="text" id="Edit-Name-catagory" placeholder="Input your catagory">
+            </label>
+            <p>this is  for create catagory when you want to create playlist</p>
+            <div class="catagory-btn">
+                <button class="Edit-catagory-popup-btn">Save</button>
+            </div>
+        </form>
+    </div>
 
     <div class="Select-artist-popup custom-scrollbar4" id="Select-artist-popup">
         <div class="container-Select-artist">
@@ -793,7 +807,18 @@ while($row = $result_song -> fetch_assoc()){
             </form>
         </div>
     </div>
-
+    <div class="Delete-category" id="Delete-category">
+        <div class="header-delete">
+            <h2>Delete category?</h2>
+            <p>You insist to Delete <span>On category</span>, right?</p>
+        </div>
+        <div class="Delete-confirm">
+            <form>
+                <a href="#" class="cancel-confirm" close-button >Cancle</a>
+                <button class="Delete-category-btn">Confirm</button>
+            </form>
+        </div>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>var allMusic = <?php echo json_encode($songs); ?>;</script>
     <script>var ArtistMusic = <?php echo json_encode($artist); ?>;</script>
