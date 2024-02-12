@@ -64,6 +64,9 @@ if (isset($_POST) && !empty($_POST)){
         $hashed_password = $row['password'];
 
         if (password_verify($password, $hashed_password)) {
+            session_start();
+            $_SESSION['user_id'] = $row['users_id'];
+            $_SESSION['username'] = $username;
             header("Location: ./web/Home.php");
             exit(); // Ensure script stops execution after redirection
         } else {

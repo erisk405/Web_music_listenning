@@ -22,7 +22,8 @@ progressBar = music_box.querySelector(".progess-bar");
 // จริงๆจะsetเป็น  musicIndex  = 2 ก็ได้แต่แค่อยากให้มัน random ตอน page refresh เฉยๆ ไม่มีไร
 let musicIndex = Math.floor((Math.random() * allMusic.length) + 1 );
 let isSpecialCondition = false;  // เงื่อนไข เมื่อเปิดเพลงในการกรองศิลปินของ Admin
-let isPlaylistCondition = false; // เงื่อนไข เมื่อเปิดเพลงในแต่ละ playlisy
+let isPlaylistCondition = false; // เงื่อนไข เมื่อเปิดเพลงในแต่ละ playlist ของ Admin
+let isPrivatePlaylistCondition = false;// เป็นเงื่อนไขที่ใช้แยก playlist ระหว่าง Admin และ User
 let OnplaylistSong = [];// ข้อมูลเพลงใน playlist 
 let NowPlayingListSong = [];  // เก็บสถานะของ playlist ว่า playlist ไหนกำลังเล่นอยู่
 let playlist_id_onGlobal = '';
@@ -157,11 +158,13 @@ const MusicPlayer = {    // funtion เหล่านี้เป็น media �
     }
     if(playlist_id_onGlobal === NowPlayingListSong){
       playingStateList();
+      Btn_follow_Midia();
     }
     
     resetBtn();
-    Btn_follow_Midia();
-    ResetBtn_Allactions(ClassListofButtonplaylist);
+    if(!isPrivatePlaylistCondition){// เป็นเงื่อนไขที่ใช้แยก playlist ระหว่าง Admin และ User
+      ResetBtn_Allactions(ClassListofButtonplaylist);
+    }
     loadMusicOnplaylist(musicIndex,OnplaylistSong);
     this.playMusic();
     playingNow();
@@ -176,11 +179,13 @@ const MusicPlayer = {    // funtion เหล่านี้เป็น media �
     }
     if(playlist_id_onGlobal === NowPlayingListSong){
       playingStateList();
+      Btn_follow_Midia();
     }
     
     resetBtn();
-    Btn_follow_Midia();
-    ResetBtn_Allactions(ClassListofButtonplaylist);
+    if(!isPrivatePlaylistCondition){ // เป็นเงื่อนไขที่ใช้แยก playlist ระหว่าง Admin และ User
+      ResetBtn_Allactions(ClassListofButtonplaylist);
+    }
     loadMusicOnplaylist(musicIndex,OnplaylistSong);
     this.playMusic();
     playingNow();
@@ -287,6 +292,17 @@ function ResetBtn_Allactions(actions_playlist) {
       }
   });
 }
+function resetActions() {
+  const allActions = document.querySelectorAll('.actions');
+  allActions.forEach(item => {
+    item.classList.remove('clicked');
+    const icon = item.querySelector('i');
+    if (icon.classList.contains('ri-pause-mini-line')) {
+      icon.classList.remove('ri-pause-mini-line');
+      icon.classList.add('ri-play-fill');
+    }
+  });
+}
 
 // -----------------------------
 // play or music button event
@@ -296,11 +312,15 @@ playPauseBtn.addEventListener("click", () => { // playPauseBtn มาจาก�
   const isMusicPaused = music_box.classList.contains("paused");
   if(isSpecialCondition && localStorage.getItem('AtercurrentArtist') === localStorage.getItem('currentArtist')){ 
     Btn_insite(); //function นี้จะทำงานก็ต่อเมื่อ เพลงที่เรากดเล่นในplaylist และ เราจะต้องอยู่ในอยู่page playList ของคนนั้นด้วย
-  }else if(isPlaylistCondition){
+  }else if(isPlaylistCondition && !isPrivatePlaylistCondition){// isPrivatePlaylistConditionเป็นเงื่อนไขที่ใช้แยก playlist ระหว่าง Admin และ User
     if(playlist_id_onGlobal === NowPlayingListSong){
       Btn_insite();
     }
     ToggleBtn_Allactions(ClassListofButtonplaylist);
+  }else if(isPlaylistCondition && isPrivatePlaylistCondition){// isPrivatePlaylistConditionเป็นเงื่อนไขที่ใช้แยก playlist ระหว่าง Admin และ User
+    if(playlist_id_onGlobal === NowPlayingListSong){
+      Btn_insite();
+    }
   }
   togglePlayStop(); //swap icon 
   // if isMusicPaused is true then call pauseMusic else call playMusic
@@ -606,17 +626,30 @@ function clicked(element) {
       updateImageQueue(filterArtist(localStorage.getItem('currentArtist')));
       resetBtn_insite();
     }else if(isPlaylistCondition){
-      loadMusicOnplaylist(musicIndex,OnplaylistSong);
-      updateImageQueue(OnplaylistSong);
-      ResetBtn_Allactions(ClassListofButtonplaylist)
-      
-      if (playlist_id_onGlobal === NowPlayingListSong) {
-        playingStateList();
-        const Pnav_left = document.querySelector(".Pnav-left"),
-        Btn_green = Pnav_left.querySelector("i");
-        Btn_green.classList.remove("ri-play-circle-fill");  
-        Btn_green.classList.remove("ri-pause-circle-fill");
-        Btn_green.classList.add("ri-pause-circle-fill");
+      if(!isPrivatePlaylistCondition){// isPrivatePlaylistConditionเป็นเงื่อนไขที่ใช้แยก playlist ระหว่าง Admin และ User
+        loadMusicOnplaylist(musicIndex,OnplaylistSong);
+        updateImageQueue(OnplaylistSong);
+        ResetBtn_Allactions(ClassListofButtonplaylist)
+        
+        if (playlist_id_onGlobal === NowPlayingListSong) {
+          playingStateList();
+          const Pnav_left = document.querySelector(".Pnav-left"),
+          Btn_green = Pnav_left.querySelector("i");
+          Btn_green.classList.remove("ri-play-circle-fill");  
+          Btn_green.classList.remove("ri-pause-circle-fill");
+          Btn_green.classList.add("ri-pause-circle-fill");
+        }
+      }else{
+        loadMusicOnplaylist(musicIndex,OnplaylistSong);
+        updateImageQueue(OnplaylistSong);
+        if (playlist_id_onGlobal === NowPlayingListSong) {
+          playingStateList();
+          const Pnav_left = document.querySelector(".Pnav-left"),
+          Btn_green = Pnav_left.querySelector("i");
+          Btn_green.classList.remove("ri-play-circle-fill");  
+          Btn_green.classList.remove("ri-pause-circle-fill");
+          Btn_green.classList.add("ri-pause-circle-fill");
+        }
       }
     }else{
       loadMusic(musicIndex);

@@ -147,7 +147,7 @@ function iconSearch(){
 // --------------------------------
 //  list albums ของฝั่ง site-left
 // --------------------------------
-
+function listItems_btn(){
 // ดึง Element ทั้งหมดที่มีคลาส 'listitem'
 const listItems = document.querySelectorAll('.listitem');
 
@@ -166,8 +166,8 @@ function toggleActiveClass(event) {
 listItems.forEach(item => {
   item.addEventListener('click', toggleActiveClass);
 });
-
-
+}
+listItems_btn();
 
 
 

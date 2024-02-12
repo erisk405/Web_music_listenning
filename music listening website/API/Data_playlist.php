@@ -4,7 +4,7 @@ include("../web/connection.php");
 if (isset($_GET['category_id'])) {
     $category_id = $_GET['category_id'];
 
-    $sql = "SELECT * FROM playlists  WHERE category_id = '$category_id' and category_id != 40"; 
+    $sql = "SELECT * FROM playlists WHERE category_id = '$category_id' and category_id != 40 and user_id = 1"; 
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
         $data = array();

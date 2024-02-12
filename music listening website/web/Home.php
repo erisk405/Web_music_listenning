@@ -1,5 +1,16 @@
 <?php
 include("./connection.php");
+
+session_start();
+if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
+    // ถ้าไม่มี session หรือ session เป็นค่าว่าง ให้ redirect กลับไปที่หน้า Login
+    header("Location: ./index.php");
+    exit();
+}
+$user_id = $_SESSION['user_id'];
+$username = $_SESSION['username'];
+
+
 // ดึงข้อมูลส่วนของ ตาราง artist
 $sql = "SELECT * FROM artists";
 $result = $conn->query($sql);
@@ -76,7 +87,7 @@ while($row = $result_song -> fetch_assoc()){
                             <h1>My Library</h1>
                         </div>
                         <div class="wrapper">
-                            <a href="#"><i class="ri-add-line"></i></a>
+                            <a href="#" id="AddPrivatePlaylist"><i class="ri-add-line"></i></a>
                             <a href="#" id="resizeButton" class="ri-arrow-right-s-line"></a>
                         </div>
                     </div>
@@ -102,7 +113,7 @@ while($row = $result_song -> fetch_assoc()){
                         </section>
                         <div class="wrap-all-list">
                             <div class="content">
-                                <form class="box" method="" action="">
+                                <form class="box" id="form-playlist-private">
                                     <a href="#">
                                         <li class="listitem">
                                             <img src="../asset/box1.jpg" alt="">
@@ -822,6 +833,8 @@ while($row = $result_song -> fetch_assoc()){
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>var allMusic = <?php echo json_encode($songs); ?>;</script>
     <script>var ArtistMusic = <?php echo json_encode($artist); ?>;</script>
+    <script>var UserID = <?php echo $user_id; ?>;</script>
+    <script>var Username = "<?php echo $username; ?>";</script>
     <script src="./active.js"></script>
     <script src="./script.js"></script>
     <script src="./playlist-music.js"></script>
