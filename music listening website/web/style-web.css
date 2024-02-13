@@ -177,6 +177,7 @@ h1 {
   font-size: 32px;
   color: #b1b1b1;
   gap: 7px;
+  visibility: hidden;
 }
 .header-left_site-right .search a{
   background-color: var(--dark-color);
@@ -322,11 +323,17 @@ h1 {
 /* wrap-all-list */
 /* ------------------ */
 
+.wrap-all-list{
+  position: relative;
+  overflow-x:hidden ;
+  height: 60dvh;
+}
 .wrap-all-list .box img,
 .wrap-music img {
   width: 55px;
   height: 55px;
   border-radius: 5px;
+  object-fit: cover;
 }
 
 .listitem {
@@ -961,7 +968,7 @@ footer {
 .header-right_site-right .user {
   line-height: 2;
   padding: 0 10px;
-  border-radius: 50%;
+  border-radius: 5px;
   background-color: var(--background-base);
   transition: background-color 150ms ease-in-out;
 }
@@ -1050,7 +1057,8 @@ footer {
 .custom-scrollbar .simplebar-scrollbar:before,
 .custom-scrollbar2 .simplebar-scrollbar:before,
 .custom-scrollbar3 .simplebar-scrollbar:before,
-.custom-scrollbar4 .simplebar-scrollbar:before{
+.custom-scrollbar4 .simplebar-scrollbar:before,
+.custom-scrollbar5 .simplebar-scrollbar:before{
   background-color: var(--grey-color); /* สีของ scrollbar ในสถานะปกติ */
   width: 19px;
   border-radius: 0;
@@ -1059,7 +1067,8 @@ footer {
 .custom-scrollbar .simplebar-track:before,
 .custom-scrollbar2 .simplebar-track:before,
 .custom-scrollbar3 .simplebar-track:before,
-.custom-scrollbar4 .simplebar-track:before {
+.custom-scrollbar4 .simplebar-track:before ,
+.custom-scrollbar5 .simplebar-track:before{
   background-color: var(--grey-color); /* สีของแถบ track */
   border-radius: 0;
 }
@@ -1067,7 +1076,8 @@ footer {
 .custom-scrollbar .simplebar-scrollbar.simplebar-visible:before,
 .custom-scrollbar2 .simplebar-scrollbar.simplebar-visible:before,
 .custom-scrollbar3 .simplebar-scrollbar.simplebar-visible:before,
-.custom-scrollbar4 .simplebar-scrollbar.simplebar-visible:before  {
+.custom-scrollbar4 .simplebar-scrollbar.simplebar-visible:before  ,
+.custom-scrollbar5 .simplebar-scrollbar.simplebar-visible:before{
   background-color: #ffffff; /* สีของ scrollbar เมื่อปรากฏ */
   width: 19px;
   border-radius: 0;
@@ -1076,7 +1086,8 @@ footer {
 .custom-scrollbar .simplebar-scrollbar.simplebar-visible:before:hover,
 .custom-scrollbar2 .simplebar-scrollbar.simplebar-visible:before:hover,
 .custom-scrollbar3 .simplebar-scrollbar.simplebar-visible:before:hover ,
-.custom-scrollbar4 .simplebar-scrollbar.simplebar-visible:before:hover{
+.custom-scrollbar4 .simplebar-scrollbar.simplebar-visible:before:hover,
+.custom-scrollbar5 .simplebar-scrollbar.simplebar-visible:before:hover {
   background-color: transparent; /* สีของ scrollbar เมื่อ hover */
   border-radius: 0;
 }
@@ -3393,7 +3404,9 @@ input:hover {
 .content-add-song-btn:active{
   scale: 0.95;
 }
-
+.add-new-tab{
+  white-space: nowrap;
+}
 
 
 @media screen and (max-width: 1220px) {

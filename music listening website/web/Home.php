@@ -111,7 +111,7 @@ while($row = $result_song -> fetch_assoc()){
                                 </div>
                             </form>
                         </section>
-                        <div class="wrap-all-list">
+                        <div class="wrap-all-list custom-scrollbar5">
                             <div class="content">
                                 <form class="box" id="form-playlist-private">
                                     <a href="#">
@@ -175,7 +175,7 @@ while($row = $result_song -> fetch_assoc()){
                         <div class="header-right_site-right">
                             <div class="wrap">
                                 <div class="add-new-tab" trigger-button data-target="add-catagory-popup">
-                                    <a href="#"><i class="ri-add-fill"></i>Add Tap</a>
+                                    <a href="#"><i class="ri-add-fill"></i>Add Category</a>
                                 </div>
                                 <div class="upload" id="upload">
                                     <i class="ri-add-circle-line"></i>
@@ -185,7 +185,7 @@ while($row = $result_song -> fetch_assoc()){
                                     <button>logout</button>
                                 </div>
                                 <div class="user">
-                                    <a href="#"><i class="ri-user-line"></i></a>
+                                    <a href="#" class="UserProfile"><i class="ri-user-line"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -243,7 +243,7 @@ while($row = $result_song -> fetch_assoc()){
                                 <div class="content artist">
                                     <div class="content-header">
                                         <h2>All-artist</h2>
-                                        <a href="#" trigger-button data-target="Select-artist-popup"><i class="ri-music-2-line"></i>Add music artist</a>
+                                        <a href="#" class="Add-music-artist" trigger-button data-target="Select-artist-popup"><i class="ri-music-2-line"></i>Add music artist</a>
                                     </div>
                                     <div class="carousel">
                                         <div class="inner-wrapper">

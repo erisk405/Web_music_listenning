@@ -27,6 +27,7 @@ let isPrivatePlaylistCondition = false;// เป็นเงื่อนไข�
 let OnplaylistSong = [];// ข้อมูลเพลงใน playlist 
 let NowPlayingListSong = [];  // เก็บสถานะของ playlist ว่า playlist ไหนกำลังเล่นอยู่
 let playlist_id_onGlobal = '';
+
 window.addEventListener("load", () => {
   loadMusic(musicIndex); //calling load music function once window loaded
   playingNow();

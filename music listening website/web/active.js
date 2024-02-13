@@ -291,6 +291,7 @@ document.addEventListener('DOMContentLoaded', function () {
   new SimpleBar(document.querySelector('.custom-scrollbar2'));
   new SimpleBar(document.querySelector('.custom-scrollbar3'));
   new SimpleBar(document.querySelector('.custom-scrollbar4'));
+  new SimpleBar(document.querySelector('.custom-scrollbar5'));
 });
 
 
@@ -554,3 +555,20 @@ for_over_background.style.background = `linear-gradient(0deg, rgba(18,18,18,1) 5
 
 
 
+
+// --------------------------------------------
+// เกี่ยว กับ permission ของแต่ละ USER และ ADMIN
+// ---------------------------------------------
+const UserProfile = document.querySelector('.UserProfile');
+UserProfile.insertAdjacentHTML("beforeend",Username);
+
+const header_right_site_right = document.querySelector('.header-right_site-right');
+const upload_BTN = header_right_site_right.querySelector('.upload') // ปุ่ม upload
+const add_new_tab = header_right_site_right.querySelector('.add-new-tab'); // ปุ่ม add category
+const Add_music_artist = document.querySelector('.Add-music-artist');
+
+if(UserID != 1){ // เพราะว่า 1 คือ Admin
+  upload_BTN.style.display = "none";
+  add_new_tab.style.display = "none";
+  Add_music_artist.style.display = "none";
+}

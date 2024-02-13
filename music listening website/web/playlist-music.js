@@ -116,8 +116,6 @@ function fetchInitialData(category_id) {  //ง่ายๆเลยคือ  a
   });
 }
 function createAndAddToPlaylist(artistId, index) { //เหมือน function addPlaylist() แต่ function สำหรับplaylist ที่เป็น Artist เท่านั้น
-  const displayData = document.querySelector(".content.artist"),
-    carousel_item_artist = displayData.querySelector(".wrapper.swiper-wrapper");
   fetch('../API/playlist_artist.php', {
     method: 'POST',
     headers: {
@@ -145,28 +143,6 @@ function createAndAddToPlaylist(artistId, index) { //เหมือน function
       return response.json(); // แปลงข้อมูลที่ได้รับเป็น JSON
     })
     .then(data => {
-      const lastIndex = data.length - 1;
-      const lastItem = data[lastIndex];
-      let carousel_artist = `<div class="carousel-item swiper-slide">
-                                  <a href="#1" class="product-permalink artist"></a>
-                                  <div class="dot-image artist">
-                                      <div class="thumbnail-artist">
-                                          <img src="../img/${ArtistMusic[index].img_file}" alt="">
-                                      </div>
-                                      <div class="actions" actions_Playlist_id = "${lastItem.playlist_id}">
-                                          <ul>
-                                              <li><a href=""><i class="ri-play-fill"></i></a></li>
-                                          </ul>
-                                      </div>
-                                  </div>
-                                  <div class="dot-info">
-                                      <h3 class="dot-title"><a href="">${lastItem.playlist_name}</a></h3>
-                                      <div class="dot-detail">
-                                          <span class="before">The toy,atom channakan</span>
-                                      </div>
-                                  </div>
-                              </div>`;
-      carousel_item_artist.insertAdjacentHTML("beforeend", carousel_artist);
       fetchInitialDataArtist();
     })
 
@@ -701,6 +677,9 @@ function fetchInitialDataCategory() { //function ที่ใช้ในกา�
       let fetchPermalinkCalled = false; // Variable to track if fetchInitialPermalink has been called
       const promises = [];
       more_select.forEach((select, index) => {
+        if(UserID != 1){ // เพราะว่า 1 คือ Admin
+          select.style.display = "none";
+        }
         const categoryId = select.getAttribute("category_id");
         select.addEventListener('click', () => {
           const more_detail_show = document.getElementById('more-detail' + categoryId);
@@ -819,8 +798,8 @@ function saveCatagory() {//เหมือนกับ fetchInitialData() นั
 // -----------------------------------------------------------
 // ส่วนของการ Addเพลง เข้ามาใน playlist จริงๆเหนื่อยมาก เดี๋ยวมาเม้นต่อ
 // -----------------------------------------------------------
-function fetchAddSongPlaylist(playlist_id) {//เหมือนกับ fetchInitialData() นั่นแหละ แต่เป็นของ Playlist Artist 
-
+async function fetchAddSongPlaylist(playlist_id) {//เหมือนกับ fetchInitialData() นั่นแหละ แต่เป็นของ Playlist Artist 
+  return new Promise((resolve, reject) => {  
   const insert_song = document.querySelector(".insert_song"); // เปิดส่วน search ที่ต้องการจะ add เพลง
   insert_song.style.display = "block";
 
@@ -893,20 +872,24 @@ function fetchAddSongPlaylist(playlist_id) {//เหมือนกับ fetchI
         });
       });
       updateDateandTimeMusic(SongOfPlaylist);
+      resolve();
     })
     .catch((error) => {
       console.error("Error: fetchInitialInplaylist", error);
     });
+  });
 }
 function fetchInitialPermalink() { /// function ที่ใช้เพื่อ showข้อมูลภายในหน้านั้นๆ
   let playlist_id_local = '';
   const product_permalink_common = document.querySelectorAll(".product-permalink:not(.artist)");
   const Setting_detail_main = document.querySelector('.Setting-detail-main');
+  const insert_song = document.querySelector('.insert_song');
   product_permalink_common.forEach((content, index) => {
     content.addEventListener("click", (event) => {
       event.preventDefault();
       playlist_id_local = content.getAttribute("playlist_id");
       console.log(index)
+
       fetch("../API/API_playlist_song.php")
         .then((response) => {
           if (!response.ok) {
@@ -914,7 +897,7 @@ function fetchInitialPermalink() { /// function ที่ใช้เพื่�
           }
           return response.json();
         })
-        .then((data_playlist_song) => {
+        .then(async (data_playlist_song) => {
           // console.log(data_playlist_song)
 
           //ในส่วนนี้ไม่มีอะไร แค่เข้าถึง CSS ในการแก้ใขในเรื่อง permission ของ User ที่จะมองเห็น
@@ -1005,11 +988,11 @@ function fetchInitialPermalink() { /// function ที่ใช้เพื่�
           });
 
           triggerOpen();
+
           upload_img_custum_detail(); // function ที่ใช้ในการ upload file รูป มาจาก active.js line 327
 
-
           updateBannerHeaderplaylist(playlist_id_local);
-          fetchAddSongPlaylist(playlist_id_local);// แสดง ขอมูลที่ต้องการจะ Add music เข้ามา
+          await fetchAddSongPlaylist(playlist_id_local);// แสดง ขอมูลที่ต้องการจะ Add music เข้ามา
           // ------------------------------------------------------
           // SongOfPlaylist เป็นส่วนของ List ย่อยๆ ใน playlist
           // ------------------------------------------------------
@@ -1081,8 +1064,23 @@ function fetchInitialPermalink() { /// function ที่ใช้เพื่�
           })
           console.log(musicIndex)
 
+          // ----------------------------------------------------
+          // ส่วนของ การกำลังหนด Permission ของ USER แลพ ADMIN 
+          // ----------------------------------------------------
+          const DeleteFromPlaylist = document.querySelectorAll('.DeleteFromPlaylist');
+          const more_setting_btn = Pnav_left.querySelector('.more-setting');
+          if(UserID != 1){ // เพราะว่า 1 คือ Admin
+            nav_title_element2.style.width = "30px";
+            insert_song.style.display = "none";
+            more_setting_btn.style.display = "none";
+            DeleteFromPlaylist.forEach(data =>{
+              data.style.display = "none";
+            })
+          }
+          
+          // ----------------------------------------------------
           // อันนี้เป็นส่วนของ การแสดงผลแต่ละ layout ต่างๆ ที่ถูกปิดใว้
-
+          // ----------------------------------------------------
           Goto_page_list.classList.add('active');
           container_top.classList.add("active");
           Goto_home_page.classList.remove('active');
@@ -1540,6 +1538,7 @@ function sortedSongsPrivatePlaylist(SongOfPlaylist, playlist_id_local) {// ก�
   console.log(box_music_list_btn)
   box_music_list_btn.forEach((content, i) => {
     content.addEventListener('click', () => {
+      resetActions();
       isSpecialCondition = false; // ปิดการใช้งานในเงื่อนไขของ Artist
       isPlaylistCondition = true;// เปิดการใช้งานในเงื่อนไขของ Playlist
       isPrivatePlaylistCondition = true; // isPrivatePlaylistConditionเป็นเงื่อนไขที่ใช้แยก playlist ระหว่าง Admin และ User
@@ -2106,17 +2105,51 @@ function fetchAddSongToPrivatePlaylist(playlist_id) {//เหมือนกั�
       console.error("Error: fetchInitialInplaylist", error);
     });
 }
-function fetchAddPrivateUserPlaylist() {
-
+function fetchAddPrivateUserPlaylist(category_id) {//  function ที่ใช้ในการ Add เพลง เข้ามาใน Userplaylist หรือ Private playlist
+  let formData = new FormData();
+  formData.append("UserID", UserID)
+  fetch("../API/playlist_api.php",{
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      user_id: UserID,
+      category_id: `${category_id}`,
+    }),
+  })
+  .then((response) =>{
+    if(response.ok){
+      return fetch('../API/Data_playlistPrivate.php',{
+        method: "POST",
+        body: formData
+      })
+    } else {
+      alert("There was a problem adding the Privateplaylist.");
+    }
+  })
+  .then((response) =>{
+    if(!response.ok){
+      throw new Error("Network response was not ok on Privateplaylist")
+    }
+    return response.json();
+  })
+  .then((data)=>{
+    fetchInitialPrivateUserPlaylist(UserID)
+    listItems_btn();
+  })
+  .catch(error =>{
+    console.error("Error:",error)
+  })
 }
-function fetchInitialPrivateUserPlaylist(UserID) {
+function fetchInitialPrivateUserPlaylist(UserID) { //  function ที่ใช้ในการ โหลดหน้า เพลง เข้ามาใน Userplaylist หรือ Private playlist 
   const form_playlist_private = document.getElementById('form-playlist-private');
   const Setting_detail_main = document.querySelector('.Setting-detail-main');
-  let fromdata = new FormData();
-  fromdata.append("UserID", UserID)
+  let formdata = new FormData();
+  formdata.append("UserID", UserID)
   fetch("../API/Data_playlistPrivate.php", {
     method: "POST",
-    body: fromdata
+    body: formdata
   })
     .then(response => {
       if (!response.ok) {
@@ -2341,7 +2374,7 @@ function fetchInitialPrivateUserPlaylist(UserID) {
 
 const AddPrivatePlaylist = document.getElementById('AddPrivatePlaylist'); // ส่วนของ การสร้างเพล์ลิส ของ USER
 AddPrivatePlaylist.addEventListener('click', () => {
-
+  fetchAddPrivateUserPlaylist(45) 
   listItems_btn();
 });
 

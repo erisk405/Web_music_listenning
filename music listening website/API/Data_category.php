@@ -1,6 +1,6 @@
 <?php
 include("../web/connection.php");
-$sql = "SELECT * FROM category WHERE category.category_id != 40";  // 40 คือส่วนของ artist  ห้ามไปยุ่ง
+$sql = "SELECT * FROM category WHERE category.category_id != 40 AND category.category_id != 45";  // 40 คือส่วนของ artist  ห้ามไปยุ่ง
 $result = $conn->query($sql);
 if($result->num_rows > 0){
     $data = array();
