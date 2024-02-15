@@ -348,18 +348,20 @@ while($row = $result_song -> fetch_assoc()){
                                     <input class="input" type="search" placeholder="Search" />
                                 </div>
                             </div>
-                            <div class="insert_song-main">
-                                <div class="wrapper">
-                                    <div class="img_insert_song">
-                                        <img src="../asset/music-icon.jpg" alt="">
+                            <div class="insert_song-main_wrapper">
+                                <div class="insert_song-main">
+                                    <div class="wrapper">
+                                        <div class="img_insert_song">
+                                            <img src="../asset/music-icon.jpg" alt="">
+                                        </div>
+                                        <div class="insert_song_title">
+                                            <h2>TOY</h2>
+                                            <p>THE TOY</p>
+                                        </div>
                                     </div>
-                                    <div class="insert_song_title">
-                                        <h2>TOY</h2>
-                                        <p>THE TOY</p>
+                                    <div class="content-add-song-btn">
+                                        <a href="#" class="add-song-btn">Add</a>
                                     </div>
-                                </div>
-                                <div class="content-add-song-btn">
-                                    <a href="#" class="add-song-btn">Add</a>
                                 </div>
                             </div>
                         </div>

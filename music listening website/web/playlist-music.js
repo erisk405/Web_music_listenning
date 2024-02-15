@@ -677,7 +677,7 @@ function fetchInitialDataCategory() { //function ที่ใช้ในกา�
       let fetchPermalinkCalled = false; // Variable to track if fetchInitialPermalink has been called
       const promises = [];
       more_select.forEach((select, index) => {
-        if(UserID != 1){ // เพราะว่า 1 คือ Admin
+        if (UserID != 1) { // เพราะว่า 1 คือ Admin
           select.style.display = "none";
         }
         const categoryId = select.getAttribute("category_id");
@@ -799,32 +799,32 @@ function saveCatagory() {//เหมือนกับ fetchInitialData() นั
 // ส่วนของการ Addเพลง เข้ามาใน playlist จริงๆเหนื่อยมาก เดี๋ยวมาเม้นต่อ
 // -----------------------------------------------------------
 async function fetchAddSongPlaylist(playlist_id) {//เหมือนกับ fetchInitialData() นั่นแหละ แต่เป็นของ Playlist Artist 
-  return new Promise((resolve, reject) => {  
-  const insert_song = document.querySelector(".insert_song"); // เปิดส่วน search ที่ต้องการจะ add เพลง
-  insert_song.style.display = "block";
+  return new Promise((resolve, reject) => {
+    const insert_song = document.querySelector(".insert_song"); // เปิดส่วน search ที่ต้องการจะ add เพลง
+    insert_song.style.display = "block";
 
-  fetch("../API/API_playlist_song.php")
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.json();
-    })
-    .then((data_playlist) => {
-      const SongOfPlaylist = data_playlist.filter(data => data.playlist_id === playlist_id)
-      const sortedSongs = allMusic.filter(playlistItem => { /// กรอง playlist ให้ไม่มีตัวที่ถูก add ไปแล้ว
-        const foundSong = SongOfPlaylist.find(song => song.song_id === playlistItem.song_id);
-        if (!foundSong) {
-          return true;
+    fetch("../API/API_playlist_song.php")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
         }
-        return false;
-      });
+        return response.json();
+      })
+      .then((data_playlist) => {
+        const SongOfPlaylist = data_playlist.filter(data => data.playlist_id === playlist_id)
+        const sortedSongs = allMusic.filter(playlistItem => { /// กรอง playlist ให้ไม่มีตัวที่ถูก add ไปแล้ว
+          const foundSong = SongOfPlaylist.find(song => song.song_id === playlistItem.song_id);
+          if (!foundSong) {
+            return true;
+          }
+          return false;
+        });
 
 
-      sortedSongsToPlaylist(SongOfPlaylist, playlist_id);
+        sortedSongsToPlaylist(SongOfPlaylist, playlist_id);
 
-      insert_song.innerHTML = ''; // clear ข้อมูลก่อน
-      let insert_song_var = `<div class="insert_song-header">
+        insert_song.innerHTML = ''; // clear ข้อมูลก่อน
+        let insert_song_var = `<div class="insert_song-header">
                                   <div class="title-head">
                                       <h3>Let's find something for your playlist</h3>
                                   </div>
@@ -836,47 +836,79 @@ async function fetchAddSongPlaylist(playlist_id) {//เหมือนกับ 
                                           ></path>
                                           </g>
                                       </svg>
-                                      <input class="input" type="search" placeholder="Search" />
+                                      <input class="input" id="Search_Song" type="search" placeholder="Search" />
                                   </div>
+                              </div>
+                              <div class="insert_song-main_wrapper">
                               </div>`;
-      insert_song.insertAdjacentHTML("beforeend", insert_song_var);
-      sortedSongs.forEach(data => { // ข้อมูลเมื่อต้องการ insert ข้อมูล
-        let insert_song_main_var = `<div class="insert_song-main">
-                                        <div class="wrapper">
-                                            <div class="img_insert_song">
-                                                <img src="../img_song/${data.img}" alt="">
-                                            </div>
-                                            <div class="insert_song_title">
-                                                <h2>${data.name}</h2>
-                                                <p>${data.artist}</p>
-                                            </div>
-                                        </div>
-                                        <div class="content-add-song-btn" song_id = ${data.song_id}>
-                                            <a href="#" class="add-song-btn">Add</a>
-                                        </div>
-                                    </div>`;
-        insert_song.insertAdjacentHTML("beforeend", insert_song_main_var)
-      })
-      const content_add_song_btn = document.querySelectorAll(".content-add-song-btn");
-      content_add_song_btn.forEach(add => {
-        add.addEventListener('click', () => {
-          addSongToPlaylist(playlist_id, add.getAttribute("song_id"), (SongOfPlaylist.length))
-        })
-      });
-      const DeleteFromPlaylist = document.querySelectorAll('.DeleteFromPlaylist')
-      DeleteFromPlaylist.forEach(Del => {
-        Del.addEventListener('click', () => {
-          let song_id = Del.getAttribute("SongID")
-          console.log(song_id)
-          DeletePlaylistSong(playlist_id, song_id)
+        insert_song.insertAdjacentHTML("beforeend", insert_song_var);
+
+        
+        // ----------------------------------------------
+        // ส่วนที่ใช้ในการทำ Search เพลง และ Add เพลง เข้ามา 
+        // ----------------------------------------------
+        const MusicOfSort = [...new Set(sortedSongs.map((item) => { return item }))]
+        const SearchOfSong = document.getElementById('Search_Song');
+        const insert_song_main_wrapper = document.querySelector('.insert_song-main_wrapper');
+        SearchOfSong.addEventListener('keyup', (e) => {
+          const searchData = e.target.value.toLowerCase();
+          const filterData = MusicOfSort.filter((item) => {
+            return (
+              (item.name && item.name.toLowerCase().includes(searchData)) || (item.artist && item.artist.toLowerCase().includes(searchData))
+            )
+          })
+          displayItem(filterData)
         });
+
+        const displayItem = (item) => {
+            insert_song_main_wrapper.innerHTML= item.map((item)=>{
+              var { artist, img, name, song_id } = item;
+              return(
+                `
+                  <div class="insert_song-main">
+                    <div class="wrapper">
+                      <div class="img_insert_song">
+                        <img src="../img_song/${img}" alt="">
+                      </div>
+                      <div class="insert_song_title">
+                        <h2>${name}</h2>
+                        <p>${artist}</p>
+                      </div>
+                    </div>
+                    <div class="content-add-song-btn" song_id="${song_id}">
+                      <a href="#" class="add-song-btn">Add</a>
+                    </div>
+                  </div>`)
+            }).join('') //.join('') ใช้เพื่อรวมสตริงทั้งหมดในอาร์เรย์เป็นสตริงเดียว โดยไม่มีสตริงว่างหรืออักขระเพิ่มเติมระหว่างสตริงแต่ละอัน
+          // -----------------------------------------------------------
+          //คำสั่งในการ Add เพลง นั้นๆ เข้าไปใน playlist โดย อ้างอิงจาก song_id
+          // -----------------------------------------------------------
+          const content_add_song_btn = document.querySelectorAll(".content-add-song-btn");
+          content_add_song_btn.forEach(add => {
+            add.addEventListener('click', () => {
+              addSongToPlaylist(playlist_id, add.getAttribute("song_id"), (SongOfPlaylist.length))
+            })
+          });
+          const DeleteFromPlaylist = document.querySelectorAll('.DeleteFromPlaylist')
+          DeleteFromPlaylist.forEach(Del => {
+            Del.addEventListener('click', () => {
+              let song_id = Del.getAttribute("SongID")
+              console.log(song_id)
+              DeletePlaylistSong(playlist_id, song_id)
+            });
+          });
+
+          // --------------------------
+          // update เวลาของเพลง
+          // --------------------------
+          updateDateandTimeMusic(SongOfPlaylist);
+        };
+        displayItem(MusicOfSort)
+        resolve();
+      })
+      .catch((error) => {
+        console.error("Error: fetchInitialInplaylist", error);
       });
-      updateDateandTimeMusic(SongOfPlaylist);
-      resolve();
-    })
-    .catch((error) => {
-      console.error("Error: fetchInitialInplaylist", error);
-    });
   });
 }
 function fetchInitialPermalink() { /// function ที่ใช้เพื่อ showข้อมูลภายในหน้านั้นๆ
@@ -997,7 +1029,7 @@ function fetchInitialPermalink() { /// function ที่ใช้เพื่�
           // SongOfPlaylist เป็นส่วนของ List ย่อยๆ ใน playlist
           // ------------------------------------------------------
           const SongOfPlaylist = data_playlist_song.filter(data_playlist => data_playlist.playlist_id === `${playlist_id_local}`) // จากนั้นก็กรองด้วย filter 
-          console.log(SongOfPlaylist);
+          // console.log(SongOfPlaylist);
           // -----------------------------------------------------------------
           // ด้านล่างนี้เป็นส่วนของ เปิดหน้า popup ขึ้นมาและ set detail ของ playlist นั้น
           // -----------------------------------------------------------------
@@ -1027,7 +1059,7 @@ function fetchInitialPermalink() { /// function ที่ใช้เพื่�
               Taglist.innerHTML = '';
               isSpecialCondition = false; // ปิดการใช้งานในเงื่อนไขของ Artist
               isPlaylistCondition = true;// เปิดการใช้งานในเงื่อนไขของ Playlist
-              isPrivatePlaylistCondition= false; // isPrivatePlaylistConditionเป็นเงื่อนไขที่ใช้แยก playlist ระหว่าง Admin และ User
+              isPrivatePlaylistCondition = false; // isPrivatePlaylistConditionเป็นเงื่อนไขที่ใช้แยก playlist ระหว่าง Admin และ User
               NowPlayingListSong = [];// ต้องเคลียร์ array ก่อน push ค่าเข้าไป
               NowPlayingListSong = playlist_id_local; // ใช้เพื่อนำมาเช็คว่า playlistไหนกำลังเล่นอยู่
               sortedSongs.forEach((music, i) => {
@@ -1069,15 +1101,15 @@ function fetchInitialPermalink() { /// function ที่ใช้เพื่�
           // ----------------------------------------------------
           const DeleteFromPlaylist = document.querySelectorAll('.DeleteFromPlaylist');
           const more_setting_btn = Pnav_left.querySelector('.more-setting');
-          if(UserID != 1){ // เพราะว่า 1 คือ Admin
+          if (UserID != 1) { // เพราะว่า 1 คือ Admin
             nav_title_element2.style.width = "30px";
             insert_song.style.display = "none";
             more_setting_btn.style.display = "none";
-            DeleteFromPlaylist.forEach(data =>{
+            DeleteFromPlaylist.forEach(data => {
               data.style.display = "none";
             })
           }
-          
+
           // ----------------------------------------------------
           // อันนี้เป็นส่วนของ การแสดงผลแต่ละ layout ต่างๆ ที่ถูกปิดใว้
           // ----------------------------------------------------
@@ -1374,7 +1406,7 @@ function sortedSongsToPlaylist(SongOfPlaylist, playlist_id_local) {// กรอ�
     Btn_follow_Midia();
   }
   const box_music_list_btn = all_music_list.querySelectorAll('.box-music-list-btn'); // all_music_list เคยประกาศใว้แล้วที่ script line 759
-  console.log(box_music_list_btn)
+  // console.log(box_music_list_btn)
   box_music_list_btn.forEach((content, i) => {
     content.addEventListener('click', () => {
       isSpecialCondition = false; // ปิดการใช้งานในเงื่อนไขของ Artist
@@ -1728,6 +1760,8 @@ function SaveDetail(playlist_id) { // function  ที่ใช้ในกา�
         if (warningDisplayed) {
           warningDisplayed.remove();
         }
+
+        UpdateDetailOnPrivatePlaylist(UserID);
         closeSetting_detail_popup();
       })
       .catch(error => {
@@ -1752,7 +1786,7 @@ function updateBannerHeaderplaylist(playlist_id) {
       // ส่วนแสดงผลรูปภาพ หน้าปก playlist
       // ตรงนีเป็นส่วนของการ เปลี่นนรูปเวลาที่มีการคลิกแต่ละเพลง
       // ----------------------------------------------------
-      console.log(data[0]);
+      // console.log(data[0]);
       const In_Name_detail = document.getElementById('In-Name-detail');
       const playlistImage = data[0].playlist_image ? `../img_playlist/${data[0].playlist_image}` : '../img_playlist/music-icon.jpg';
       const dot_title = data[0].playlist_name ? data[0].playlist_name : `playlist` + `${data[0].playlist_id}`
@@ -2064,42 +2098,73 @@ function fetchAddSongToPrivatePlaylist(playlist_id) {//เหมือนกั�
                                           ></path>
                                           </g>
                                       </svg>
-                                      <input class="input" type="search" placeholder="Search" />
+                                      <input class="input" id="Search_Song" type="search" placeholder="Search" />
                                   </div>
+                              </div>
+                              <div class="insert_song-main_wrapper">
                               </div>`;
       insert_song.insertAdjacentHTML("beforeend", insert_song_var);
-      sortedSongs.forEach(data => { // ข้อมูลเมื่อต้องการ insert ข้อมูล
-        let insert_song_main_var = `<div class="insert_song-main">
-                                        <div class="wrapper">
-                                            <div class="img_insert_song">
-                                                <img src="../img_song/${data.img}" alt="">
-                                            </div>
-                                            <div class="insert_song_title">
-                                                <h2>${data.name}</h2>
-                                                <p>${data.artist}</p>
-                                            </div>
-                                        </div>
-                                        <div class="content-add-song-btn" song_id = ${data.song_id}>
-                                            <a href="#" class="add-song-btn">Add</a>
-                                        </div>
-                                    </div>`;
-        insert_song.insertAdjacentHTML("beforeend", insert_song_main_var)
-      })
-      const content_add_song_btn = document.querySelectorAll(".content-add-song-btn");
-      content_add_song_btn.forEach(add => {
-        add.addEventListener('click', () => {
-          addSongToPlaylist(playlist_id, add.getAttribute("song_id"), (SongOfPlaylist.length))
-        })
-      });
-      const DeleteFromPlaylist = document.querySelectorAll('.DeleteFromPlaylist')
-      DeleteFromPlaylist.forEach(Del => {
-        Del.addEventListener('click', () => {
-          let song_id = Del.getAttribute("SongID")
-          console.log(song_id)
-          DeletePlaylistSong(playlist_id, song_id)
+        
+        // ----------------------------------------------
+        // ส่วนที่ใช้ในการทำ Search เพลง และ Add เพลง เข้ามา 
+        // ----------------------------------------------
+        const MusicOfSort = [...new Set(sortedSongs.map((item) => { return item }))]
+        const SearchOfSong = document.getElementById('Search_Song');
+        const insert_song_main_wrapper = document.querySelector('.insert_song-main_wrapper');
+        SearchOfSong.addEventListener('keyup', (e) => {
+          const searchData = e.target.value.toLowerCase();
+          const filterData = MusicOfSort.filter((item) => {
+            return (
+              (item.name && item.name.toLowerCase().includes(searchData)) || (item.artist && item.artist.toLowerCase().includes(searchData))
+            )
+          })
+          displayItem(filterData)
         });
-      });
-      updateDateandTimeMusic(SongOfPlaylist);
+
+        const displayItem = (item) => {
+            insert_song_main_wrapper.innerHTML= item.map((item)=>{
+              var { artist, img, name, song_id } = item;
+              return(
+                `
+                  <div class="insert_song-main">
+                    <div class="wrapper">
+                      <div class="img_insert_song">
+                        <img src="../img_song/${img}" alt="">
+                      </div>
+                      <div class="insert_song_title">
+                        <h2>${name}</h2>
+                        <p>${artist}</p>
+                      </div>
+                    </div>
+                    <div class="content-add-song-btn" song_id="${song_id}">
+                      <a href="#" class="add-song-btn">Add</a>
+                    </div>
+                  </div>`)
+            }).join('') //.join('') ใช้เพื่อรวมสตริงทั้งหมดในอาร์เรย์เป็นสตริงเดียว โดยไม่มีสตริงว่างหรืออักขระเพิ่มเติมระหว่างสตริงแต่ละอัน
+          // -----------------------------------------------------------
+          //คำสั่งในการ Add เพลง นั้นๆ เข้าไปใน playlist โดย อ้างอิงจาก song_id
+          // -----------------------------------------------------------
+          const content_add_song_btn = document.querySelectorAll(".content-add-song-btn");
+          content_add_song_btn.forEach(add => {
+            add.addEventListener('click', () => {
+              addSongToPlaylist(playlist_id, add.getAttribute("song_id"), (SongOfPlaylist.length))
+            })
+          });
+          const DeleteFromPlaylist = document.querySelectorAll('.DeleteFromPlaylist')
+          DeleteFromPlaylist.forEach(Del => {
+            Del.addEventListener('click', () => {
+              let song_id = Del.getAttribute("SongID")
+              console.log(song_id)
+              DeletePlaylistSong(playlist_id, song_id)
+            });
+          });
+
+          // --------------------------
+          // update เวลาของเพลง
+          // --------------------------
+          updateDateandTimeMusic(SongOfPlaylist);
+        };
+        displayItem(MusicOfSort)
     })
     .catch((error) => {
       console.error("Error: fetchInitialInplaylist", error);
@@ -2108,7 +2173,7 @@ function fetchAddSongToPrivatePlaylist(playlist_id) {//เหมือนกั�
 function fetchAddPrivateUserPlaylist(category_id) {//  function ที่ใช้ในการ Add เพลง เข้ามาใน Userplaylist หรือ Private playlist
   let formData = new FormData();
   formData.append("UserID", UserID)
-  fetch("../API/playlist_api.php",{
+  fetch("../API/playlist_api.php", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -2118,29 +2183,29 @@ function fetchAddPrivateUserPlaylist(category_id) {//  function ที่ใช�
       category_id: `${category_id}`,
     }),
   })
-  .then((response) =>{
-    if(response.ok){
-      return fetch('../API/Data_playlistPrivate.php',{
-        method: "POST",
-        body: formData
-      })
-    } else {
-      alert("There was a problem adding the Privateplaylist.");
-    }
-  })
-  .then((response) =>{
-    if(!response.ok){
-      throw new Error("Network response was not ok on Privateplaylist")
-    }
-    return response.json();
-  })
-  .then((data)=>{
-    fetchInitialPrivateUserPlaylist(UserID)
-    listItems_btn();
-  })
-  .catch(error =>{
-    console.error("Error:",error)
-  })
+    .then((response) => {
+      if (response.ok) {
+        return fetch('../API/Data_playlistPrivate.php', {
+          method: "POST",
+          body: formData
+        })
+      } else {
+        alert("There was a problem adding the Privateplaylist.");
+      }
+    })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok on Privateplaylist")
+      }
+      return response.json();
+    })
+    .then((data) => {
+      fetchInitialPrivateUserPlaylist(UserID)
+      listItems_btn();
+    })
+    .catch(error => {
+      console.error("Error:", error)
+    })
 }
 function fetchInitialPrivateUserPlaylist(UserID) { //  function ที่ใช้ในการ โหลดหน้า เพลง เข้ามาใน Userplaylist หรือ Private playlist 
   const form_playlist_private = document.getElementById('form-playlist-private');
@@ -2262,7 +2327,6 @@ function fetchInitialPrivateUserPlaylist(UserID) { //  function ที่ใช�
 
               const submit_detail = document.querySelector('.submit-detail');
               submit_detail.addEventListener('click', () => {
-                console.log(playlist_id_local);
                 SaveDetail(playlist_id_local);
               });
 
@@ -2372,9 +2436,42 @@ function fetchInitialPrivateUserPlaylist(UserID) { //  function ที่ใช�
 }
 
 
+
+function UpdateDetailOnPrivatePlaylist(UserID) {
+  const listitem = document.querySelectorAll('.listitem');
+  let formdata = new FormData();
+  formdata.append("UserID", UserID);
+  fetch("../API/Data_playlistPrivate.php", {
+    method: "POST",
+    body: formdata
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("response was not ok in PrivateUsePlaylist")
+      }
+      return response.json();
+    })
+    .then(data => {
+      listitem.forEach((content, index) => {
+        const playlistImage = data[index].playlist_image ? `../img_playlist/${data[index].playlist_image}` : '../img_playlist/music-icon.jpg';
+        const dot_title = data[index].playlist_name ? data[index].playlist_name : `playlist` + `${data[index].playlist_id}`;
+
+        const img_banner = content.querySelector("img");
+        const Title_name = content.querySelector(".detail p")
+        img_banner.setAttribute("src", playlistImage)
+        Title_name.innerText = dot_title;
+      })
+
+    })
+    .catch(error => {
+      console.error("Error", error)
+
+    });
+}
+
 const AddPrivatePlaylist = document.getElementById('AddPrivatePlaylist'); // ส่วนของ การสร้างเพล์ลิส ของ USER
 AddPrivatePlaylist.addEventListener('click', () => {
-  fetchAddPrivateUserPlaylist(45) 
+  fetchAddPrivateUserPlaylist(45)
   listItems_btn();
 });
 
