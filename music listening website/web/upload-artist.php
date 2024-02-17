@@ -74,6 +74,30 @@ if(isset($_POST) and isset($_POST['Edit-artist-name'])){
 
         } else {
             echo "ไม่พบไฟล์ $Old_file_name ในโฟลเดอร์";
+                
+            if (!file_exists($dir.$file_name)){
+                if (move_uploaded_file($_FILES["Edit-file-img-artist"]["tmp_name"], $dir.$file_name)) {
+                    echo "The file ". basename( $_FILES["Edit-file-img-artist"]["name"]). " has been uploaded.";
+                }
+                header("Location: Home.php");
+            }
+            else{
+                $New_FileName = time().$file_name;
+                $file_name = $New_FileName;
+                if (move_uploaded_file($_FILES["Edit-file-img-artist"]["tmp_name"], $dir.$file_name)) {
+                    echo "The file ". basename( $_FILES["Edit-file-img-artist"]["name"]). " has been uploaded.";
+                }
+            }
+            $sql = "UPDATE artists SET artist_name = '$Edit_artist_name', image_filename = '$file_name' WHERE artist_id = $artist_on_edit";
+            $result = $conn -> query($sql);
+            
+            if ($result) {
+                header("Location: Home.php");
+                exit();
+                
+            } else {
+                echo "มีข้อผิดพลาดเกิดขึ้นในการแก้ไขข้อมูล";
+            }
         }
     
     }

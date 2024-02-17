@@ -1870,7 +1870,7 @@ footer {
   width: 250px;
   padding: 5px 0px 5px 40px;
   border-radius: 9999px;
-  border: solid 1px #333;
+  border: none;
   transition: all 0.2s ease-in-out;
   outline: none;
   opacity: 0.8;
@@ -1898,7 +1898,7 @@ footer {
   transition: var(--transition-background);
 }
 .container-Search .Add-artist:hover {
-  background-color: var(--background-base);
+  background-color: var(--background-button2);
   color: white;
 }
 

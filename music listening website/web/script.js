@@ -9,18 +9,18 @@
 const songAddedDate = new Date(); // วันที่ปัจจุบัน
 
 const music_box = document.querySelector(".music-box"),
-musicImg = music_box.querySelector(".image-area img"),
-musicName = music_box.querySelector(".detail .name"),
-musicArtist = music_box.querySelector(".detail .artist"),
-mainAudio = music_box.querySelector("#main-audio"),
-playPauseBtn = music_box.querySelector(".play-stop"),
-prevBtn = music_box.querySelector("#skip-left"),
-nextBtn = music_box.querySelector("#skip-right"),
-progressArea = music_box.querySelector(".progress-area"),
-progressBar = music_box.querySelector(".progess-bar");
+  musicImg = music_box.querySelector(".image-area img"),
+  musicName = music_box.querySelector(".detail .name"),
+  musicArtist = music_box.querySelector(".detail .artist"),
+  mainAudio = music_box.querySelector("#main-audio"),
+  playPauseBtn = music_box.querySelector(".play-stop"),
+  prevBtn = music_box.querySelector("#skip-left"),
+  nextBtn = music_box.querySelector("#skip-right"),
+  progressArea = music_box.querySelector(".progress-area"),
+  progressBar = music_box.querySelector(".progess-bar");
 
 // จริงๆจะsetเป็น  musicIndex  = 2 ก็ได้แต่แค่อยากให้มัน random ตอน page refresh เฉยๆ ไม่มีไร
-let musicIndex = Math.floor((Math.random() * allMusic.length) + 1 );
+let musicIndex = Math.floor((Math.random() * allMusic.length) + 1);
 let isSpecialCondition = false;  // เงื่อนไข เมื่อเปิดเพลงในการกรองศิลปินของ Admin
 let isPlaylistCondition = false; // เงื่อนไข เมื่อเปิดเพลงในแต่ละ playlist ของ Admin
 let isPrivatePlaylistCondition = false;// เป็นเงื่อนไขที่ใช้แยก playlist ระหว่าง Admin และ User
@@ -38,7 +38,7 @@ window.addEventListener("load", () => {
 
 
 // load music function
-function loadMusic(indexNumb){
+function loadMusic(indexNumb) {
   // ตรงนี้ต้องแน่ใจว่า allMusic มีค่าหรือไม่ และ indexNumb ที่ส่งมาต้องไม่เกินขอบเขตของ allMusic.length
   if (allMusic && indexNumb >= 1 && indexNumb <= allMusic.length) {
     musicName.innerText = allMusic[indexNumb - 1].name;
@@ -51,7 +51,7 @@ function loadMusic(indexNumb){
 }
 
 // load music function ของ playlist
-function loadMusicOnplaylist(indexNumb,sortedSongs){ // ณับ indexของเพลงเข้ามา และ รับ array ที่เพลงในplaylist ที่ถูกsorted แล้ว
+function loadMusicOnplaylist(indexNumb, sortedSongs) { // ณับ indexของเพลงเข้ามา และ รับ array ที่เพลงในplaylist ที่ถูกsorted แล้ว
   if (sortedSongs && indexNumb >= 1 && indexNumb <= sortedSongs.length) {
     musicName.innerText = sortedSongs[indexNumb - 1].name;
     musicArtist.innerText = sortedSongs[indexNumb - 1].artist;
@@ -82,7 +82,7 @@ function loadMusicByArtist(indexNumb, artistName) { // ok เอาสรุป�
 
 // next music function for specific artist
 let artistIndexGlobal = 6;  // set ใว้ เพื่อเป็นตัวแปร global
-function filterArtist(artistName){   //funtionนี้จะกรองarray ของเพลงทั้งหมด ให้เหลือแค่ ศิลปินคนนั้นๆ
+function filterArtist(artistName) {   //funtionนี้จะกรองarray ของเพลงทั้งหมด ให้เหลือแค่ ศิลปินคนนั้นๆ
   const filteredMusic = allMusic.filter(music => music.artist === artistName);
   return filteredMusic;
 }
@@ -115,14 +115,14 @@ const MusicPlayer = {    // funtion เหล่านี้เป็น media �
     // here just increment of index by 1 
     musicIndex--;
     // ถ้า musicIndex > 1   ก็จะset  musicIndex เป็น allMusic.length
-    musicIndex < 1  ?  musicIndex = allMusic.length : musicIndex = musicIndex ;
+    musicIndex < 1 ? musicIndex = allMusic.length : musicIndex = musicIndex;
     loadMusic(musicIndex);
     this.playMusic();
     playingNow();
     updateImageQueue(allMusic);
   },
 
-  nextMusicForArtist(){ // ฟังชั่นนี้มีใว้เป็นใช้แทน nextMusic เพราะว่าเมื่อเรา filter array allmusic การจัดเรียงในarray จะเปลี่ยนแปลงเลยต้องใช้functionนี้เพื่อให้สอดคล้องกัน
+  nextMusicForArtist() { // ฟังชั่นนี้มีใว้เป็นใช้แทน nextMusic เพราะว่าเมื่อเรา filter array allmusic การจัดเรียงในarray จะเปลี่ยนแปลงเลยต้องใช้functionนี้เพื่อให้สอดคล้องกัน
     resetBtn_insite();
     resetBtn();
     const maxIndex = filterArtist(localStorage.getItem('currentArtist')).length; //ใช้ ฟังชั่น filterArtistในการกรอง array ชื่อ artist จะมาจาก Local storage
@@ -136,7 +136,7 @@ const MusicPlayer = {    // funtion เหล่านี้เป็น media �
     updateImageQueue(filterArtist(localStorage.getItem('currentArtist'))); // อัพเดทรูปภาพตาม array ที่ถูกกรอง\
   },
 
-  prevMusicForArtist(){
+  prevMusicForArtist() {
     resetBtn_insite();
     resetBtn();
     const maxIndex = filterArtist(localStorage.getItem('currentArtist')).length;
@@ -144,50 +144,50 @@ const MusicPlayer = {    // funtion เหล่านี้เป็น media �
     if (musicIndex < 1) {
       musicIndex = maxIndex; // loop back to the last song of the artist
     }
-  
+
     loadMusicByArtist(musicIndex, localStorage.getItem('currentArtist'));
     this.playMusic();
     playingNow();
     updateImageQueue(filterArtist(localStorage.getItem('currentArtist')));
   },
 
-  nextMusicForPlaylist(){ 
-    const maxIndex = OnplaylistSong.length; 
+  nextMusicForPlaylist() {
+    const maxIndex = OnplaylistSong.length;
     musicIndex++;
     if (musicIndex > maxIndex) {
-      musicIndex = 1; 
+      musicIndex = 1;
     }
-    if(playlist_id_onGlobal === NowPlayingListSong){
+    if (playlist_id_onGlobal === NowPlayingListSong) {
       playingStateList();
       Btn_follow_Midia();
     }
-    
+
     resetBtn();
-    if(!isPrivatePlaylistCondition){// เป็นเงื่อนไขที่ใช้แยก playlist ระหว่าง Admin และ User
+    if (!isPrivatePlaylistCondition) {// เป็นเงื่อนไขที่ใช้แยก playlist ระหว่าง Admin และ User
       ResetBtn_Allactions(ClassListofButtonplaylist);
     }
-    loadMusicOnplaylist(musicIndex,OnplaylistSong);
+    loadMusicOnplaylist(musicIndex, OnplaylistSong);
     this.playMusic();
     playingNow();
     updateImageQueue(OnplaylistSong);
   },
 
-  prevMusicForPlaylist(){ 
-    const maxIndex = OnplaylistSong.length; 
+  prevMusicForPlaylist() {
+    const maxIndex = OnplaylistSong.length;
     musicIndex--;
     if (musicIndex < 1) {
-      musicIndex = maxIndex; 
+      musicIndex = maxIndex;
     }
-    if(playlist_id_onGlobal === NowPlayingListSong){
+    if (playlist_id_onGlobal === NowPlayingListSong) {
       playingStateList();
       Btn_follow_Midia();
     }
-    
+
     resetBtn();
-    if(!isPrivatePlaylistCondition){ // เป็นเงื่อนไขที่ใช้แยก playlist ระหว่าง Admin และ User
+    if (!isPrivatePlaylistCondition) { // เป็นเงื่อนไขที่ใช้แยก playlist ระหว่าง Admin และ User
       ResetBtn_Allactions(ClassListofButtonplaylist);
     }
-    loadMusicOnplaylist(musicIndex,OnplaylistSong);
+    loadMusicOnplaylist(musicIndex, OnplaylistSong);
     this.playMusic();
     playingNow();
     updateImageQueue(OnplaylistSong);
@@ -196,10 +196,10 @@ const MusicPlayer = {    // funtion เหล่านี้เป็น media �
 
 
 // funtion(reset button) ไม่มีไรมาก set ในสถานะเป็น "กำลังเล่น"
-function resetBtn(){
-  const icon = playPauseBtn.querySelector("i"); 
+function resetBtn() {
+  const icon = playPauseBtn.querySelector("i");
   const isMusicPaused = music_box.classList.contains("paused");
-  if(!isMusicPaused){
+  if (!isMusicPaused) {
     icon.classList.remove("ri-pause-circle-fill");
     icon.classList.remove("ri-play-circle-fill");
     icon.classList.add("ri-pause-circle-fill");
@@ -208,11 +208,11 @@ function resetBtn(){
 
 
 // funtion(artist reset button) เหมือนกับ function ข้างบนเลยแต่เป็นของ artist 
-function resetBtn_insite(){
+function resetBtn_insite() {
   const Pnav_left = document.querySelector(".Pnav-left"),
-  Btn_green = Pnav_left.querySelector("i");
+    Btn_green = Pnav_left.querySelector("i");
   const isMusicPaused = music_box.classList.contains("paused");
-  if(!isMusicPaused && localStorage.getItem('AtercurrentArtist') === localStorage.getItem('currentArtist')){ // ทำต้องคำสั่งนี้เช็ค เพราะเพื่อให้การทำงานในการreset มันสอดคล้องกับตัวอื่นๆ 
+  if (!isMusicPaused && localStorage.getItem('AtercurrentArtist') === localStorage.getItem('currentArtist')) { // ทำต้องคำสั่งนี้เช็ค เพราะเพื่อให้การทำงานในการreset มันสอดคล้องกับตัวอื่นๆ 
     Btn_green.classList.remove("ri-pause-circle-fill");
     Btn_green.classList.remove("ri-play-circle-fill");
     Btn_green.classList.add("ri-pause-circle-fill");
@@ -233,14 +233,14 @@ function togglePlayStop() {
 }
 
 // togglePlaySto in artist เหมือนข้างบนแต่เป็นของ artist
-function Btn_insite(){
+function Btn_insite() {
   const Pnav_left = document.querySelector(".Pnav-left"),
-  Btn_green = Pnav_left.querySelector("i");
-  if(Btn_green.classList.contains("ri-play-circle-fill")){
+    Btn_green = Pnav_left.querySelector("i");
+  if (Btn_green.classList.contains("ri-play-circle-fill")) {
     Btn_green.classList.remove("ri-play-circle-fill");
     Btn_green.classList.add("ri-pause-circle-fill");
   }
-  else{
+  else {
     Btn_green.classList.remove("ri-pause-circle-fill");
     Btn_green.classList.add("ri-play-circle-fill");
   }
@@ -248,32 +248,32 @@ function Btn_insite(){
 
 
 
- // ------------------------------------------------------
+// ------------------------------------------------------
 //  ด้านล่างนี้เป็นส่วนของ  การ สับเปลี่ยนiconด้านหน้าของ playlist 
 // ------------------------------------------------------
 // function ของ toggle และแยกแยะแต่ละปุ่มของ ปุ่มเล่นเพลงที่Hoverอยู่ ของแต่ละ box playlist
-function ToggleBtn_Allactions(actions_playlist){
+function ToggleBtn_Allactions(actions_playlist) {
   const Allactions_playlist = document.querySelectorAll('.actions');
   Allactions_playlist.forEach(item => {
     if (item !== actions_playlist) {
-        item.classList.remove('clicked');
-        const icon = item.querySelector('i');
-        if (icon.classList.contains('ri-pause-mini-line')) {
-            icon.classList.remove('ri-pause-mini-line');
-            icon.classList.add('ri-play-fill');
-          }
+      item.classList.remove('clicked');
+      const icon = item.querySelector('i');
+      if (icon.classList.contains('ri-pause-mini-line')) {
+        icon.classList.remove('ri-pause-mini-line');
+        icon.classList.add('ri-play-fill');
       }
-  });
-    const actions_icon = actions_playlist.querySelector('i');
-    if (actions_icon.classList.contains('ri-play-fill')) {
-        actions_icon.classList.remove('ri-play-fill');
-        actions_icon.classList.add('ri-pause-mini-line');
-        actions_playlist.classList.add('clicked'); // เพิ่ม class 'clicked' เมื่อถูกคลิก
-    } else {
-        actions_icon.classList.remove('ri-pause-mini-line');
-        actions_icon.classList.add('ri-play-fill');
-        actions_playlist.classList.remove('clicked'); // ลบ class 'clicked' เมื่อถูกคลิกอีกครั้ง
     }
+  });
+  const actions_icon = actions_playlist.querySelector('i');
+  if (actions_icon.classList.contains('ri-play-fill')) {
+    actions_icon.classList.remove('ri-play-fill');
+    actions_icon.classList.add('ri-pause-mini-line');
+    actions_playlist.classList.add('clicked'); // เพิ่ม class 'clicked' เมื่อถูกคลิก
+  } else {
+    actions_icon.classList.remove('ri-pause-mini-line');
+    actions_icon.classList.add('ri-play-fill');
+    actions_playlist.classList.remove('clicked'); // ลบ class 'clicked' เมื่อถูกคลิกอีกครั้ง
+  }
 }
 function ResetBtn_Allactions(actions_playlist) {
   const Allactions_playlist = document.querySelectorAll('.actions');
@@ -281,16 +281,16 @@ function ResetBtn_Allactions(actions_playlist) {
   actions_icon.classList.remove('ri-play-fill');
   actions_icon.classList.remove('ri-pause-mini-line');
   actions_icon.classList.add('ri-pause-mini-line');
-  actions_playlist.classList.add('clicked'); 
+  actions_playlist.classList.add('clicked');
   Allactions_playlist.forEach(item => {
     if (item !== actions_playlist) {
-        item.classList.remove('clicked');
-        const icon = item.querySelector('i');
-        if (icon.classList.contains('ri-pause-mini-line')) {
-            icon.classList.remove('ri-pause-mini-line');
-            icon.classList.add('ri-play-fill');
-          }
+      item.classList.remove('clicked');
+      const icon = item.querySelector('i');
+      if (icon.classList.contains('ri-pause-mini-line')) {
+        icon.classList.remove('ri-pause-mini-line');
+        icon.classList.add('ri-play-fill');
       }
+    }
   });
 }
 function resetActions() {
@@ -311,15 +311,15 @@ function resetActions() {
 let ClassListofButtonplaylist = [];
 playPauseBtn.addEventListener("click", () => { // playPauseBtn มาจากตัวแปรข้างบน เป็นปุ่มที่ใช้กด play-pause
   const isMusicPaused = music_box.classList.contains("paused");
-  if(isSpecialCondition && localStorage.getItem('AtercurrentArtist') === localStorage.getItem('currentArtist')){ 
+  if (isSpecialCondition && localStorage.getItem('AtercurrentArtist') === localStorage.getItem('currentArtist')) {
     Btn_insite(); //function นี้จะทำงานก็ต่อเมื่อ เพลงที่เรากดเล่นในplaylist และ เราจะต้องอยู่ในอยู่page playList ของคนนั้นด้วย
-  }else if(isPlaylistCondition && !isPrivatePlaylistCondition){// isPrivatePlaylistConditionเป็นเงื่อนไขที่ใช้แยก playlist ระหว่าง Admin และ User
-    if(playlist_id_onGlobal === NowPlayingListSong){
+  } else if (isPlaylistCondition && !isPrivatePlaylistCondition) {// isPrivatePlaylistConditionเป็นเงื่อนไขที่ใช้แยก playlist ระหว่าง Admin และ User
+    if (playlist_id_onGlobal === NowPlayingListSong) {
       Btn_insite();
     }
     ToggleBtn_Allactions(ClassListofButtonplaylist);
-  }else if(isPlaylistCondition && isPrivatePlaylistCondition){// isPrivatePlaylistConditionเป็นเงื่อนไขที่ใช้แยก playlist ระหว่าง Admin และ User
-    if(playlist_id_onGlobal === NowPlayingListSong){
+  } else if (isPlaylistCondition && isPrivatePlaylistCondition) {// isPrivatePlaylistConditionเป็นเงื่อนไขที่ใช้แยก playlist ระหว่าง Admin และ User
+    if (playlist_id_onGlobal === NowPlayingListSong) {
       Btn_insite();
     }
   }
@@ -335,9 +335,9 @@ playPauseBtn.addEventListener("click", () => { // playPauseBtn มาจาก�
 nextBtn.addEventListener("click", () => {
   if (isSpecialCondition) {
     MusicPlayer.nextMusicForArtist();
-  }else if(isPlaylistCondition){
+  } else if (isPlaylistCondition) {
     MusicPlayer.nextMusicForPlaylist();// ใช้งานของ playlist
-  }else {
+  } else {
     MusicPlayer.nextMusic(); // ใช้งานตามปกติ
   }
 });
@@ -349,9 +349,9 @@ nextBtn.addEventListener("click", () => {
 prevBtn.addEventListener("click", () => {
   if (isSpecialCondition) {
     MusicPlayer.prevMusicForArtist();
-  }else if(isPlaylistCondition){
+  } else if (isPlaylistCondition) {
     MusicPlayer.prevMusicForPlaylist();  // ใช้งานของ playlist
-  }else {
+  } else {
     MusicPlayer.prevMusic(); // ใช้งานตามปกติ
   }
 });
@@ -360,31 +360,31 @@ prevBtn.addEventListener("click", () => {
 // ------------------------------------------------------
 // update progress bar width according to music current time ส่วนของการบอก ขนาด เวลาของเพลง
 // -------------------------------------------------------
-mainAudio.addEventListener("timeupdate", (e) =>{
+mainAudio.addEventListener("timeupdate", (e) => {
   const currentTime = e.target.currentTime; //getting current time song
   const duration = e.target.duration; //getting total duration of song
   let progressWidth = (currentTime / duration) * 100;
   progressBar.style.width = `${progressWidth}%`; // ตรงนี้ ส่วนของ หลอด progress bar
 
   let musicCurrentTime = music_box.querySelector(".current"),
-  musicDuration = music_box.querySelector(".duration");
+    musicDuration = music_box.querySelector(".duration");
   mainAudio.addEventListener("loadeddata", () => {
     // update song total duration
     let audioDuration = mainAudio.duration;
     let totalMin = Math.floor(audioDuration / 60);
     let totalSec = Math.floor(audioDuration % 60);
-    if(totalSec < 10){ // adding 0 if sec is less than 10
+    if (totalSec < 10) { // adding 0 if sec is less than 10
       totalSec = `0${totalSec}`;
     }
     musicDuration.innerText = `${totalMin}:${totalSec}`;
   });
-      // update playing song cuurent time
-    let currentMin = Math.floor(currentTime / 60);
-    let currentSec = Math.floor(currentTime % 60);
-    if(currentSec < 10){ // adding 0 if sec is less than 10
-      currentSec = `0${currentSec}`;
-    }
-    musicCurrentTime.innerText = `${currentMin}:${currentSec}`;
+  // update playing song cuurent time
+  let currentMin = Math.floor(currentTime / 60);
+  let currentSec = Math.floor(currentTime % 60);
+  if (currentSec < 10) { // adding 0 if sec is less than 10
+    currentSec = `0${currentSec}`;
+  }
+  musicCurrentTime.innerText = `${currentMin}:${currentSec}`;
 });
 
 
@@ -392,7 +392,7 @@ mainAudio.addEventListener("timeupdate", (e) =>{
 // -----------------------------------------------------------------------------------------------------
 // let's update playing song cuurent time on according to the progress bar width  ส่วนของ progress bar เด้อ
 // -----------------------------------------------------------------------------------------------------
-progressArea.addEventListener("click", (e)=>{
+progressArea.addEventListener("click", (e) => {
   let progressWidthval = progressArea.clientWidth; //getting width of progress bar
   let clickedOffSetX = e.offsetX; // getting offset x value
   let songDuration = mainAudio.duration; //getting song total duration
@@ -407,24 +407,24 @@ progressArea.addEventListener("click", (e)=>{
 });
 
 const repeatBtn = music_box.querySelector("#repeat");
-repeatBtn.addEventListener("click", () =>{
+repeatBtn.addEventListener("click", () => {
   const icon = repeatBtn.querySelector("i");
   // first we get the innerText of the icon then we'll  change accordingly
   // เงื่อนไขด้านล่างคือ swap icon และ set title ของ icon แต่ละตัว
-  if(icon.classList.contains("ri-repeat-2-line")){
-      icon.classList.remove("ri-repeat-2-line");
-      icon.classList.add("ri-repeat-one-line");
-      icon.setAttribute("title","Song looped");
+  if (icon.classList.contains("ri-repeat-2-line")) {
+    icon.classList.remove("ri-repeat-2-line");
+    icon.classList.add("ri-repeat-one-line");
+    icon.setAttribute("title", "Song looped");
   }
-  else if(icon.classList.contains("ri-repeat-one-line")){
-      icon.classList.remove("ri-repeat-one-line");
-      icon.classList.add("ri-shuffle-line");  
-      icon.setAttribute("title","Playback shuffle");
+  else if (icon.classList.contains("ri-repeat-one-line")) {
+    icon.classList.remove("ri-repeat-one-line");
+    icon.classList.add("ri-shuffle-line");
+    icon.setAttribute("title", "Playback shuffle");
   }
-  else{
+  else {
     icon.classList.remove("ri-shuffle-line");
     icon.classList.add("ri-repeat-2-line");
-    icon.setAttribute("title","Playlist looped");
+    icon.setAttribute("title", "Playlist looped");
   }
 });
 
@@ -435,72 +435,72 @@ repeatBtn.addEventListener("click", () =>{
 // after the song ended
 // -----------------------------------------------------------------------------------------------------
 
-mainAudio.addEventListener("ended", () =>{
+mainAudio.addEventListener("ended", () => {
   // we'll do according to the icon mean if user has set icon to loop song then we'll repeat
   // the current song and will do further accordingly
   const icon = repeatBtn.querySelector("i");
-  if(icon.classList.contains("ri-repeat-2-line")){ // ถ้าเป็น repeat 2 จะเล่นเพลงถัดไป
+  if (icon.classList.contains("ri-repeat-2-line")) { // ถ้าเป็น repeat 2 จะเล่นเพลงถัดไป
     if (isSpecialCondition) {
       MusicPlayer.nextMusicForArtist();
-    }else if(isPlaylistCondition){
+    } else if (isPlaylistCondition) {
       MusicPlayer.nextMusicForPlaylist();
     } else {
       MusicPlayer.nextMusic();
     }
   }
-  else if(icon.classList.contains("ri-repeat-one-line")){ // ถ้าเป็น repeat 1 จะวนลูปเพลงเดิม
+  else if (icon.classList.contains("ri-repeat-one-line")) { // ถ้าเป็น repeat 1 จะวนลูปเพลงเดิม
     mainAudio.currentTime = 0;
     MusicPlayer.playMusic();
   }
-  else{
-      if (isSpecialCondition) {
-        const filteredArtistList = filterArtist(localStorage.getItem('currentArtist'));
-        if (filteredArtistList.length > 1) {
-            do {
-                randInArtist = Math.floor(Math.random() * filteredArtistList.length + 1);
-            } while (musicIndex === randInArtist);
-            musicIndex = randInArtist;
-            loadMusicByArtist(musicIndex, localStorage.getItem('currentArtist'));
-            MusicPlayer.playMusic();
-            playingNow();
-            updateImageQueue(filteredArtistList);
-        } else if (filteredArtistList.length === 1) {
-          mainAudio.currentTime = 0;
-          MusicPlayer.playMusic();
-        }
-      }else if(isPlaylistCondition){
-        if (OnplaylistSong.length > 1) {
-          console.log(OnplaylistSong.length);
-            do {
-                randInArtist = Math.floor(Math.random() * OnplaylistSong.length + 1);
-            } while (musicIndex === randInArtist);
-            musicIndex = randInArtist;
-            loadMusicOnplaylist(musicIndex,OnplaylistSong)// ส่งตำแหน่งของเพลงออกไป
-            MusicPlayer.playMusic();
-            playingNow();
-            updateImageQueue(OnplaylistSong);
-            playingStateList(); //update ด้านใน
-        } else if (OnplaylistSong.length === 1) {
-          mainAudio.currentTime = 0;
-          MusicPlayer.playMusic();
-        }
+  else {
+    if (isSpecialCondition) {
+      const filteredArtistList = filterArtist(localStorage.getItem('currentArtist'));
+      if (filteredArtistList.length > 1) {
+        do {
+          randInArtist = Math.floor(Math.random() * filteredArtistList.length + 1);
+        } while (musicIndex === randInArtist);
+        musicIndex = randInArtist;
+        loadMusicByArtist(musicIndex, localStorage.getItem('currentArtist'));
+        MusicPlayer.playMusic();
+        playingNow();
+        updateImageQueue(filteredArtistList);
+      } else if (filteredArtistList.length === 1) {
+        mainAudio.currentTime = 0;
+        MusicPlayer.playMusic();
       }
-       else {
-          if (allMusic.length > 1) {
-              do {
-                  randIndex = Math.floor(Math.random() * allMusic.length + 1);
-              } while (musicIndex === randIndex);
-              musicIndex = randIndex;
-              loadMusic(musicIndex);
-              MusicPlayer.playMusic();
-              playingNow();
-              updateImageQueue(allMusic);
-          } else if (allMusic.length === 1) {
-            mainAudio.currentTime = 0;
-            MusicPlayer.playMusic();
-          }
+    } else if (isPlaylistCondition) {
+      if (OnplaylistSong.length > 1) {
+        console.log(OnplaylistSong.length);
+        do {
+          randInArtist = Math.floor(Math.random() * OnplaylistSong.length + 1);
+        } while (musicIndex === randInArtist);
+        musicIndex = randInArtist;
+        loadMusicOnplaylist(musicIndex, OnplaylistSong)// ส่งตำแหน่งของเพลงออกไป
+        MusicPlayer.playMusic();
+        playingNow();
+        updateImageQueue(OnplaylistSong);
+        playingStateList(); //update ด้านใน
+      } else if (OnplaylistSong.length === 1) {
+        mainAudio.currentTime = 0;
+        MusicPlayer.playMusic();
       }
     }
+    else {
+      if (allMusic.length > 1) {
+        do {
+          randIndex = Math.floor(Math.random() * allMusic.length + 1);
+        } while (musicIndex === randIndex);
+        musicIndex = randIndex;
+        loadMusic(musicIndex);
+        MusicPlayer.playMusic();
+        playingNow();
+        updateImageQueue(allMusic);
+      } else if (allMusic.length === 1) {
+        mainAudio.currentTime = 0;
+        MusicPlayer.playMusic();
+      }
+    }
+  }
 });
 
 
@@ -509,8 +509,8 @@ mainAudio.addEventListener("ended", () =>{
 // -----------------------------------------------------
 
 const site_queue = document.querySelector(".site-queue"),
-Taglist = site_queue.querySelector(".wrap-queue-list");
-for(let i = 0; i < allMusic.length; i++){    // ใส่ box-index="${i}" เพื่อนำไปใช้ในฟังชั่นข้างล่าง
+  Taglist = site_queue.querySelector(".wrap-queue-list");
+for (let i = 0; i < allMusic.length; i++) {    // ใส่ box-index="${i}" เพื่อนำไปใช้ในฟังชั่นข้างล่าง
   let boxlist = `<div class="box-list" box-index="${i + 1}" box-artist-index="${i + 1}" artist_name="${allMusic[i].artist}">  
                   <a href="#" class="for-select"></a>
                   <audio class="${allMusic[i].src}" id="${allMusic[i].src}" src="../music/${allMusic[i].src}"></audio>
@@ -527,48 +527,48 @@ for(let i = 0; i < allMusic.length; i++){    // ใส่ box-index="${i}" เ�
   Taglist.insertAdjacentHTML("beforeend", boxlist);
 };
 
-function updateImageQueue(filteredMusic){
+function updateImageQueue(filteredMusic) {
   const title_queue_image = site_queue.querySelector(".title-info > .wrap");
   const queue_image = document.querySelector(".queue-image");
 
   let imageQueue = `<a href="#">
-                    <img src="../img_song/${filteredMusic[musicIndex-1].img}" alt="">
+                    <img src="../img_song/${filteredMusic[musicIndex - 1].img}" alt="">
                     </a>`;
   queue_image.innerHTML = '';
-  queue_image.insertAdjacentHTML("beforeend",imageQueue);
+  queue_image.insertAdjacentHTML("beforeend", imageQueue);
 
-  let TitleInfoQueue = `<a href="#">${filteredMusic[musicIndex-1].name}</a>
+  let TitleInfoQueue = `<a href="#">${filteredMusic[musicIndex - 1].name}</a>
                         <div class="artish">
-                            <label for="">${filteredMusic[musicIndex-1].artist}</label>
+                            <label for="">${filteredMusic[musicIndex - 1].artist}</label>
                         </div>`;
   title_queue_image.innerHTML = '';
-  title_queue_image.insertAdjacentHTML("beforeend",TitleInfoQueue);
+  title_queue_image.insertAdjacentHTML("beforeend", TitleInfoQueue);
 }
 
 
 
 
 // -----------------------------------------------------------------------------------------------------
-function playingNow(){   // สร้าง funtion เพื่อนำไปใช้กับ loadMusic ด้วย ไม่งั้นเพลงไม่เล่นเด้อ\
-//  ตรงนี้จะเป็นส่วนของการกดเล่นเพลงใน menu - open-playlist
-const goPlaying = Taglist.querySelectorAll(".playing"); //เข้าถึงคลาส playing ทุกคลาสก่อนเพราะวางโครงสร้างใว้แล้ว จากด้านบน
-// console.log(goPlaying);
-const allboxlist = Taglist.querySelectorAll(".box-list"); //เข้าถึงคลาส box-list ทุกคลาสก่อนเพราะวางโครงสร้างใว้แล้ว จากด้านบน
-// console.log(allboxlist);  // เรียก play-list ทั้งหมด
-  for(let j = 0; j < allboxlist.length; j++){    // วนลูปตามจำนวนของ box-list ที่สร้างมา
+function playingNow() {   // สร้าง funtion เพื่อนำไปใช้กับ loadMusic ด้วย ไม่งั้นเพลงไม่เล่นเด้อ\
+  //  ตรงนี้จะเป็นส่วนของการกดเล่นเพลงใน menu - open-playlist
+  const goPlaying = Taglist.querySelectorAll(".playing"); //เข้าถึงคลาส playing ทุกคลาสก่อนเพราะวางโครงสร้างใว้แล้ว จากด้านบน
+  // console.log(goPlaying);
+  const allboxlist = Taglist.querySelectorAll(".box-list"); //เข้าถึงคลาส box-list ทุกคลาสก่อนเพราะวางโครงสร้างใว้แล้ว จากด้านบน
+  // console.log(allboxlist);  // เรียก play-list ทั้งหมด
+  for (let j = 0; j < allboxlist.length; j++) {    // วนลูปตามจำนวนของ box-list ที่สร้างมา
     let playingContent = '';                                   // สร้างตัวแปรรอใว้ เพื่อนำไป เขียนลง html อันนี้นั่งโง่โครตนานกว่าจะได้ จำใส่หัวด้วย
-    if(allboxlist[j].getAttribute("box-index") == musicIndex){  // วนลูปตามปกติ เมื่อเจอ  box-index == musicIndex ก็ทำซะ
+    if (allboxlist[j].getAttribute("box-index") == musicIndex) {  // วนลูปตามปกติ เมื่อเจอ  box-index == musicIndex ก็ทำซะ
       playingContent = `<div class="greenline line-1"></div>
                         <div class="greenline line-2"></div>
                         <div class="greenline line-3"></div>
                         <div class="greenline line-4"></div>
-                        <div class="greenline line-5"></div>`; 
+                        <div class="greenline line-5"></div>`;
     }  // เก็บคำสั่งพวกนี้ใว้ในตัวแปรซะ
-    else{
+    else {
       playingContent = `<i class="ri-play-fill"></i>`;
     }
     // Clear the content before adding new elements   ถ้าทำแบบนี้มันจะก็เครียร์ content หลังจาก add elements เข้าไป , กุก็นั่ง งงตั้งนาน
-    goPlaying[j].innerHTML = playingContent; 
+    goPlaying[j].innerHTML = playingContent;
 
     // adding onclick attribute in all boxlist 
     allboxlist[j].setAttribute("onclick", "clicked(this)");
@@ -576,7 +576,7 @@ const allboxlist = Taglist.querySelectorAll(".box-list"); //เข้าถึ�
 
 }
 
-function Btn_follow_Midia(){
+function Btn_follow_Midia() {
   const icon = playPauseBtn.querySelector("i");
   const Pnav_left = document.querySelector(".Pnav-left"),
     Btn_green = Pnav_left.querySelector("i");
@@ -588,78 +588,78 @@ function Btn_follow_Midia(){
     Btn_green.classList.add("ri-pause-circle-fill");
   }
 }
-function playingStateList(){ 
+function playingStateList() {
   const goPlaying_playlist = all_music_list.querySelectorAll(".playing"); //เข้าถึงคลาส playing ทุกคลาสก่อนเพราะวางโครงสร้างใว้แล้ว จากด้านบน
   const box_music_list_btn = all_music_list.querySelectorAll('.box-music-list-btn'); // all_music_list เคยประกาศใว้แล้วที่ script line 759
 
   const index_of_song = all_music_list.querySelectorAll('.index');
-  for(let j = 0; j < box_music_list_btn.length; j++){    
-    let StateOfPlaylist = '';            
-    if(box_music_list_btn[j].getAttribute("box-index") == musicIndex){
+  for (let j = 0; j < box_music_list_btn.length; j++) {
+    let StateOfPlaylist = '';
+    if (box_music_list_btn[j].getAttribute("box-index") == musicIndex) {
       StateOfPlaylist = `<div class="greenline line-1"></div>
                         <div class="greenline line-2"></div>
                         <div class="greenline line-3"></div>
                         <div class="greenline line-4"></div>
-                        <div class="greenline line-5"></div>`; 
-                        
+                        <div class="greenline line-5"></div>`;
+
       goPlaying_playlist[j].classList.add("showState");
       index_of_song[j].style.opacity = '0';
       goPlaying_playlist[j].style.opacity = '1';
-    }else{
-      
+    } else {
+
       StateOfPlaylist = `<i class="ri-play-fill"></i>`;
       goPlaying_playlist[j].classList.remove("showState");
       goPlaying_playlist[j].style.opacity = '0';
       index_of_song[j].style.opacity = '1';
     }
-    goPlaying_playlist[j].innerHTML = StateOfPlaylist; 
-  }  
+    goPlaying_playlist[j].innerHTML = StateOfPlaylist;
+  }
 }
 // ----------------------------
 // function clicked(element)  ฟังชั่นนี้จะคู่กับ ฟังชั่น playingNow ด้านบนเมื่อคลิกที่ Attribute("box-index") ตัวไหน ก็จะเล่นเพลงนั้นๆ
 // ----------------------------
 function clicked(element) {
-    let getBox_index = element.getAttribute("box-index");
-    console.log(getBox_index);
-    musicIndex = getBox_index;
-    if(isSpecialCondition){
-      loadMusicByArtist(musicIndex, localStorage.getItem('currentArtist'));
-      updateImageQueue(filterArtist(localStorage.getItem('currentArtist')));
-      resetBtn_insite();
-    }else if(isPlaylistCondition){
-      if(!isPrivatePlaylistCondition){// isPrivatePlaylistConditionเป็นเงื่อนไขที่ใช้แยก playlist ระหว่าง Admin และ User
-        loadMusicOnplaylist(musicIndex,OnplaylistSong);
-        updateImageQueue(OnplaylistSong);
-        ResetBtn_Allactions(ClassListofButtonplaylist)
-        
-        if (playlist_id_onGlobal === NowPlayingListSong) {
-          playingStateList();
-          const Pnav_left = document.querySelector(".Pnav-left"),
-          Btn_green = Pnav_left.querySelector("i");
-          Btn_green.classList.remove("ri-play-circle-fill");  
-          Btn_green.classList.remove("ri-pause-circle-fill");
-          Btn_green.classList.add("ri-pause-circle-fill");
-        }
-      }else{
-        loadMusicOnplaylist(musicIndex,OnplaylistSong);
-        updateImageQueue(OnplaylistSong);
-        if (playlist_id_onGlobal === NowPlayingListSong) {
-          playingStateList();
-          const Pnav_left = document.querySelector(".Pnav-left"),
-          Btn_green = Pnav_left.querySelector("i");
-          Btn_green.classList.remove("ri-play-circle-fill");  
-          Btn_green.classList.remove("ri-pause-circle-fill");
-          Btn_green.classList.add("ri-pause-circle-fill");
-        }
-      }
-    }else{
-      loadMusic(musicIndex);
-      updateImageQueue(allMusic);
-    }
+  let getBox_index = element.getAttribute("box-index");
+  console.log(getBox_index);
+  musicIndex = getBox_index;
+  if (isSpecialCondition) {
+    loadMusicByArtist(musicIndex, localStorage.getItem('currentArtist'));
+    updateImageQueue(filterArtist(localStorage.getItem('currentArtist')));
+    resetBtn_insite();
+  } else if (isPlaylistCondition) {
+    if (!isPrivatePlaylistCondition) {// isPrivatePlaylistConditionเป็นเงื่อนไขที่ใช้แยก playlist ระหว่าง Admin และ User
+      loadMusicOnplaylist(musicIndex, OnplaylistSong);
+      updateImageQueue(OnplaylistSong);
+      ResetBtn_Allactions(ClassListofButtonplaylist)
 
-    resetBtn();
-    MusicPlayer.playMusic();
-    playingNow();
+      if (playlist_id_onGlobal === NowPlayingListSong) {
+        playingStateList();
+        const Pnav_left = document.querySelector(".Pnav-left"),
+          Btn_green = Pnav_left.querySelector("i");
+        Btn_green.classList.remove("ri-play-circle-fill");
+        Btn_green.classList.remove("ri-pause-circle-fill");
+        Btn_green.classList.add("ri-pause-circle-fill");
+      }
+    } else {
+      loadMusicOnplaylist(musicIndex, OnplaylistSong);
+      updateImageQueue(OnplaylistSong);
+      if (playlist_id_onGlobal === NowPlayingListSong) {
+        playingStateList();
+        const Pnav_left = document.querySelector(".Pnav-left"),
+          Btn_green = Pnav_left.querySelector("i");
+        Btn_green.classList.remove("ri-play-circle-fill");
+        Btn_green.classList.remove("ri-pause-circle-fill");
+        Btn_green.classList.add("ri-pause-circle-fill");
+      }
+    }
+  } else {
+    loadMusic(musicIndex);
+    updateImageQueue(allMusic);
+  }
+
+  resetBtn();
+  MusicPlayer.playMusic();
+  playingNow();
 }
 
 
@@ -672,7 +672,7 @@ const volumeControl = document.getElementById('volumeControl');
 const mute = document.querySelector(".in-volume i");
 
 // เพิ่ม Event Listener ที่ Input Element เพื่อปรับระดับเสียง
-volumeControl.addEventListener('input', function() {
+volumeControl.addEventListener('input', function () {
   if (!mute.classList.contains("ri-volume-mute-fill")) {
     audio.volume = this.value; //เหมือนกับ  audio.volume = volumeControl.value; นั้นแหละ ให้อัพเดทค่า
   }
@@ -694,41 +694,83 @@ mute.addEventListener('click', () => {
 
 
 
+function RemoveMusicState() {
+  localStorage.removeItem('currentMusicIndex');
+  localStorage.removeItem('currentArtist');
+}
+
+
+function AftersaveMusicState() {
+  localStorage.setItem('AtercurrentArtist', ArtistMusic[artistIndexGlobal - 1].artist_name);
+}
+function removeAftersaveMusicState() {
+  localStorage.removeItem('AtercurrentArtist');
+}
+
+function saveMusicState() {
+  localStorage.setItem('currentMusicIndex', musicIndex);
+  localStorage.setItem('currentArtist', ArtistMusic[artistIndexGlobal - 1].artist_name);
+}
+
+function loadMusicState() {
+  if (localStorage.getItem('AtercurrentArtist') === localStorage.getItem('currentArtist')) {
+    const icon = playPauseBtn.querySelector("i");
+    if (icon.classList.contains("ri-pause-circle-fill")) {
+      Btn_green.classList.remove("ri-pause-circle-fill");
+      Btn_green.classList.remove("ri-play-circle-fill");
+      Btn_green.classList.add("ri-pause-circle-fill");
+    }
+    else {
+      Btn_green.classList.remove("ri-pause-circle-fill");
+      Btn_green.classList.remove("ri-play-circle-fill");
+      Btn_green.classList.add("ri-play-circle-fill");
+    }
+  }
+}
 
 // ส่วนของหน้า all artist----------------------------------------------------------
 // insite_upload_page  มาจาก หน้า active js นะ เพราะเคยสร้างใว้แล้วเลยดึงมาได้เลย บรรทัดที่ 68
 // ------------------------------------------------------------------------------------
 console.log(ArtistMusic);
 console.log(allMusic);
-  const upload_content = insite_upload_page.querySelector(".upload-container");
-  let uniqueArtists = new Set();
-  let NumOfIndex = 1
-  for(let i = 0; i < ArtistMusic.length; i++){
-    if (!uniqueArtists.has(ArtistMusic[i].artist_name)) {
-      uniqueArtists.add(ArtistMusic[i].artist_name); // ถ้ายังไม่มีให้เพิ่มเข้าไปใน Set
-      let Artistlist = `<div class="upload-content">
-                          <a href="#" class="for-upload-content"  artist-index="${i+1}"></a>
-                          <div class="upload-detail">
-                              <span class="artist-index">${NumOfIndex}</span>
-                              <img src="../img/${ArtistMusic[i].img_file}" alt="">
-                              <div class="info-artist">
-                                  <span>${ArtistMusic[i].artist_name}</span>
-                              </div>
-                          </div>
-                          <div class="Date-add-on">
-                              <span>5 day ago</span>
-                          </div>
-                          <div class="upload-manage">
-                              <button class="upload-button" name-upload-button="${ArtistMusic[i].artist_name}"  index-id-artist="${ArtistMusic[i].artist_id}"  trigger-button data-target="Add-song-popup">Upload</button>
-                              <button class="edit-button" name-edit-button="${ArtistMusic[i].artist_name}" edit-id-artist="${ArtistMusic[i].artist_id}" edit-img-artist="${ArtistMusic[i].img_file}" trigger-button data-target="Edit-artist-popup">Edit</button>
-                              <button class="dlt-button" name-delete-button="${ArtistMusic[i].artist_name}" delete-id-artist="${ArtistMusic[i].artist_id}" delete-img-artist="${ArtistMusic[i].img_file}" trigger-button data-target="Delete-artist-popup">Delete</button>
-                          </div>
-                        </div>`;
-      upload_content.insertAdjacentHTML("beforeend", Artistlist);
-      NumOfIndex++;
-    }
-  };
 
+// ส่วนของการ Search ข้อมูล มาใช้กับ Artist
+const ArtistOfSort = [...new Set(ArtistMusic.map((item, index) => ({ ...item, index })))];
+const SearchOfArtist = document.getElementById('Search_artist');
+const upload_content = insite_upload_page.querySelector(".upload-container");
+const upload_Artist_wrapper = document.querySelector('.upload-Artist_wrapper')
+SearchOfArtist.addEventListener('keyup', (e) => {
+  const searchArtist = e.target.value.toLowerCase();
+  const filterDataArtist = ArtistOfSort.filter((item) => {
+    return (
+      (item.artist_name && item.artist_name.toLowerCase().includes(searchArtist))
+    )
+  })
+  displayArtistItem(filterDataArtist);
+});
+const displayArtistItem = (itemOfSearch) => {
+  upload_Artist_wrapper.innerHTML = itemOfSearch.map((item, i) => {
+    var { img_file, artist_name, artist_id ,index} = item;
+    return (
+      `<div class="upload-content">
+            <a href="#" class="for-upload-content"  artist-index="${index + 1}"></a>
+            <div class="upload-detail">
+                <span class="artist-index">${index + 1}</span>
+                <img src="../img/${img_file}" alt="">
+                <div class="info-artist">
+                    <span>${artist_name}</span>
+                </div>
+            </div>
+            <div class="Date-add-on">
+                <span>5 day ago</span>
+            </div>
+            <div class="upload-manage">
+                <button class="upload-button" name-upload-button="${artist_name}"  index-id-artist="${artist_id}"  trigger-button data-target="Add-song-popup">Upload</button>
+                <button class="edit-button" name-edit-button="${artist_name}" edit-id-artist="${artist_id}" edit-img-artist="${img_file}" trigger-button data-target="Edit-artist-popup">Edit</button>
+                <button class="dlt-button" name-delete-button="${artist_name}" delete-id-artist="${artist_id}" delete-img-artist="${img_file}" trigger-button data-target="Delete-artist-popup">Delete</button>
+            </div>
+          </div>`)
+  }).join('')
   // -----------------------------
   // แยกส่วนของแต่ละ delete-song
   // ---------------------------
@@ -738,14 +780,14 @@ console.log(allMusic);
   const Delete_artist_input = document.querySelector('.Delete-artist-input');
   const Input_delete_artist_img = Delete_artist_popup.querySelector('.Input-delete-artist-img');
   Delete_artist_button.forEach(Delete_artist => {
-    Delete_artist.addEventListener('click', () =>{
-      Delete_artist_name = Delete_artist.getAttribute("name-delete-button");
-      Delete_artist_id = Delete_artist.getAttribute("delete-id-artist");
-      Delete_artist_img = Delete_artist.getAttribute("delete-img-artist");
-      
+    Delete_artist.addEventListener('click', () => {
+      let Delete_artist_name = Delete_artist.getAttribute("name-delete-button");
+      let Delete_artist_id = Delete_artist.getAttribute("delete-id-artist");
+      let Delete_artist_img = Delete_artist.getAttribute("delete-img-artist");
+
       Update_Delete_Name_artist.innerHTML = `${Delete_artist_name}`;
-      Input_delete_artist_img.setAttribute("value",`${Delete_artist_img}`);
-      Delete_artist_input.setAttribute("value",`${Delete_artist_id}`);
+      Input_delete_artist_img.setAttribute("value", `${Delete_artist_img}`);
+      Delete_artist_input.setAttribute("value", `${Delete_artist_id}`);
     });
   });
 
@@ -753,30 +795,29 @@ console.log(allMusic);
   // แยกส่วนของแต่ละ upload-button
   // ---------------------------
   const Add_song_header = document.querySelector("#Add-song-header"),
-  required_title = Add_song_header.querySelector('p');
+    required_title = Add_song_header.querySelector('p');
 
   const title_of_addsong = Add_song_header.querySelector('h1');
-  
+
   const backgourd_song_popup = document.querySelector('.backgourd-song-popup');
 
   const upload_manage = document.querySelector('.upload-manage'),
-  upload_button_on_admin = document.querySelectorAll('.upload-button');
-
-  let uploadIndex = ''; 
+    upload_button_on_admin = document.querySelectorAll('.upload-button');
+  let uploadIndex = '';
   let id_artist = '';
-  upload_button_on_admin.forEach((upload_song,i) =>{
+  upload_button_on_admin.forEach((upload_song, i) => {
     let backgourd_song = '';
     upload_song.addEventListener('click', () => {
       uploadIndex = upload_song.getAttribute("name-upload-button");
-      
+
       title_of_addsong.innerText = uploadIndex;
-      
+
       id_artist = upload_song.getAttribute("index-id-artist");
       console.log(id_artist);
 
       backgourd_song = `
       <div class="backgourd-song-popup">
-            <img src="../img/${ArtistMusic[i].img_file}" alt="">
+            <img src="../img/${itemOfSearch[i].img_file}" alt="">
       </div>`;
       backgourd_song_popup.innerHTML = backgourd_song;
     });
@@ -789,30 +830,30 @@ console.log(allMusic);
   const edit_button_on_admin = document.querySelectorAll('.edit-button');
   const headerOfEdit = Edit_artist_popup.querySelector('.Edit-header');
   const Editcustum_file_upload2 = document.getElementById('custum-edit-file-upload');
-  
+
   let editIndex = '';
   edit_button_on_admin.forEach((Edit_artist, i) => {
     Edit_artist.addEventListener('click', () => {
-    const image_on_edit = Edit_artist_popup.querySelector('img');
-    const inputElement = Edit_artist_popup.querySelector(".input-name-artist");
-    const artist_id_on_edit = Edit_artist_popup.querySelector(".artist-id-on-edit");
-    const old_name_img = Edit_artist_popup.querySelector(".old-name-img");
+      const image_on_edit = Edit_artist_popup.querySelector('img');
+      const inputElement = Edit_artist_popup.querySelector(".input-name-artist");
+      const artist_id_on_edit = Edit_artist_popup.querySelector(".artist-id-on-edit");
+      const old_name_img = Edit_artist_popup.querySelector(".old-name-img");
       if (image_on_edit) {
         image_on_edit.remove();
       }
       const EditImg = document.createElement('img');
-  
+
       editIndex = Edit_artist.getAttribute("name-edit-button");
       const editImg = Edit_artist.getAttribute("edit-img-artist");
       const id_edit = Edit_artist.getAttribute("edit-id-artist");
-      
+
       Editcustum_file_upload2.appendChild(EditImg);
       EditImg.setAttribute('src', `../img/${editImg}`);
       headerOfEdit.innerHTML = `<span>EDIT</span> | ${editIndex}`;
 
       inputElement.setAttribute("value", `${editIndex}`);
-      artist_id_on_edit.setAttribute("value",`${id_edit}`);
-      old_name_img.setAttribute("value",`${editImg}`);
+      artist_id_on_edit.setAttribute("value", `${id_edit}`);
+      old_name_img.setAttribute("value", `${editImg}`);
     });
   });
 
@@ -822,58 +863,53 @@ console.log(allMusic);
   // ส่วนนี้จะเป็นการที่เรากดปุ่ม input แล้วนำข้อมูลของform ส่งไปที่ upload_song.php
   // -----------------------------------------------------------------
 
-    var submitBtn = document.querySelector('.wrapper-submit button');
+  var submitBtn = document.querySelector('.wrapper-submit button');
 
-    submitBtn.addEventListener('click', function(event) {
-      event.preventDefault();
+  submitBtn.addEventListener('click', function (event) {
+    event.preventDefault();
 
-      var requiredFields = document.querySelectorAll('.inp-group [required]');
-      var isValid = true;
+    var requiredFields = document.querySelectorAll('.inp-group [required]');
+    var isValid = true;
 
-      // เพิ่มตัวแปรเพื่อเก็บข้อมูลศิลปิน
-      requiredFields.forEach(function(field) {
-        if (!field.value) {
-          isValid = false;
-          required_title.innerHTML = "* Please fill out all information completely.";
-          // แสดงข้อความเตือนหรือการแสดงสถานะที่นี่ (ตัวอย่างเช่น console.log())
-          console.log(field.name + " is required");
-        }
-      });
-
-      if (isValid) {
-        required_title.innerHTML = "";
-        var formData = new FormData(document.querySelector('.inp-group'));
-        console.log(id_artist);
-        formData.append('id_artist', id_artist);
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', './upload_song.php', true);
-        xhr.onload = function() {
-            if (xhr.status === 200) {
-                console.log(xhr.responseText);
-                // ทำสิ่งที่ต้องการหลังจากบันทึกข้อมูลลงในฐานข้อมูลเสร็จสมบูรณ์
-                location.reload();
-            } else {
-                console.error('เกิดข้อผิดพลาดในการส่งข้อมูล');
-            }
-        };
-        xhr.send(formData);
+    // เพิ่มตัวแปรเพื่อเก็บข้อมูลศิลปิน
+    requiredFields.forEach(function (field) {
+      if (!field.value) {
+        isValid = false;
+        required_title.innerHTML = "* Please fill out all information completely.";
+        // แสดงข้อความเตือนหรือการแสดงสถานะที่นี่ (ตัวอย่างเช่น console.log())
+        console.log(field.name + " is required");
       }
     });
 
+    if (isValid) {
+      required_title.innerHTML = "";
+      var formData = new FormData(document.querySelector('.inp-group'));
+      console.log(id_artist);
+      formData.append('id_artist', id_artist);
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', './upload_song.php', true);
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          console.log(xhr.responseText);
+          // ทำสิ่งที่ต้องการหลังจากบันทึกข้อมูลลงในฐานข้อมูลเสร็จสมบูรณ์
+          location.reload();
+        } else {
+          console.error('เกิดข้อผิดพลาดในการส่งข้อมูล');
+        }
+      };
+      xhr.send(formData);
+    }
+  });
 
-// ----------------------------------------------------------------------
-// สามารถใช้  Goto_page_list ได้เลยเนื่องจากประกาศ class ใว้แล้วที่ active.js // 64
-// ----------------------------------------------------------------------
 
-function RemoveMusicState() {
-  localStorage.removeItem('currentMusicIndex');
-  localStorage.removeItem('currentArtist');
-}
+  // ----------------------------------------------------------------------
+  // สามารถใช้  Goto_page_list ได้เลยเนื่องจากประกาศ class ใว้แล้วที่ active.js // 64
+  // ----------------------------------------------------------------------
   // function ทั้งหมดในข้างล่างทั้งหมดนี้ จะเป็นส่วนของ หน้าตาของการจำแนกเพลงแต่ละศิลปิน เมื่อเราคลิกเข้าไป
   const header_on_playlist = Goto_page_list.querySelector('.wrapper-playlist'),
-  playlist_image = header_on_playlist.querySelector('.playlist-image'),
-  playlist_title = header_on_playlist.querySelector('.playlist-title'),
-  playlist_nav = document.querySelector('.playlist-nav');
+    playlist_image = header_on_playlist.querySelector('.playlist-image'),
+    playlist_title = header_on_playlist.querySelector('.playlist-title'),
+    playlist_nav = document.querySelector('.playlist-nav');
 
   const all_music_list = document.querySelector('.all-music-list');
   // console.log(all_music_list);
@@ -893,12 +929,12 @@ function RemoveMusicState() {
       // ---------------------------------------------------------------------------
 
       const artistIndex = content.getAttribute("artist-index");
-      console.log(index);
+      console.log(artistIndex);
       // เมื่อผู้ใช้คลิกที่ศิลปินนั้นๆ
       artistIndexGlobal = artistIndex;
       removeAftersaveMusicState();
       AftersaveMusicState();
-      let playlist_nav_var =`<div class="Pnav-left">
+      let playlist_nav_var = `<div class="Pnav-left">
                               <i class="ri-play-circle-fill" Pnav-index="${index}"></i>
                               <label class="container-music">
                                   <input type="checkbox">
@@ -920,47 +956,19 @@ function RemoveMusicState() {
 
       playlist_nav.innerHTML = playlist_nav_var;
 
-      function AftersaveMusicState() {
-        localStorage.setItem('AtercurrentArtist', ArtistMusic[artistIndexGlobal - 1].artist_name);
-      }
-      function removeAftersaveMusicState(){
-        localStorage.removeItem('AtercurrentArtist');
-      }
-
-      function saveMusicState() {
-        localStorage.setItem('currentMusicIndex', musicIndex);
-        localStorage.setItem('currentArtist', ArtistMusic[artistIndexGlobal - 1].artist_name);
-      }
-
-      function loadMusicState() {
-        if (localStorage.getItem('AtercurrentArtist') === localStorage.getItem('currentArtist')) {
-          const icon = playPauseBtn.querySelector("i");
-          if (icon.classList.contains("ri-pause-circle-fill")){
-            Btn_green.classList.remove("ri-pause-circle-fill");
-            Btn_green.classList.remove("ri-play-circle-fill");
-            Btn_green.classList.add("ri-pause-circle-fill");
-          }
-          else{
-            Btn_green.classList.remove("ri-pause-circle-fill");
-            Btn_green.classList.remove("ri-play-circle-fill");
-            Btn_green.classList.add("ri-play-circle-fill");
-          }
-        }
-      }
-
       let follow_green = true;
       if (localStorage.getItem('AtercurrentArtist') === localStorage.getItem('currentArtist')) {
         follow_green = true;
       }
-      else{
+      else {
         follow_green = false;
       }
 
       // artist-in butoon
       const Pnav_left = document.querySelector(".Pnav-left"),
-      Btn_green = Pnav_left.querySelector("i");
+        Btn_green = Pnav_left.querySelector("i");
       const artistName = ArtistMusic[artistIndexGlobal - 1].artist_name;
-      
+
       function checkIfAllMatch() {
         const elementsInTaglist = Array.from(site_queue.querySelectorAll(".wrap-queue-list [artist_name]"));
         const allMatch = elementsInTaglist.every(element => {
@@ -970,24 +978,24 @@ function RemoveMusicState() {
         console.log(allMatch);
         return allMatch;
       }
-      
+
       checkIfAllMatch();
       loadMusicState();
-      Btn_green.addEventListener('click' , () =>{  
-          musicIndex = 1;
-          RemoveMusicState();
-          saveMusicState();
-          // ให้เคลียร์ข้อมูลใน Queue ก่อนทุกครั้งที่มีการคลิก     /// เมื่อกี้กลับมาไล่โค้ดตัวเอง งงเลยตัวเองเขียนไรวะ ดีนะเม้นใว้
-          if(!checkIfAllMatch() || (Taglist.innerHTML === '')){
-            Taglist.innerHTML = '';
-            
-            isPlaylistCondition = false;// เปิดการใช้งานในเงื่อนไขของ Playlist
-            isSpecialCondition = true; 
-            // วนลูปเพื่อเพิ่มเพลงของศิลปินที่ถูกเลือกเข้าไปใน Queue
-            let countSong = 1;
-            allMusic.forEach((music, i) => {
-              if (music.artist === ArtistMusic[artistIndex - 1].artist_name) {
-                let boxlist = `<div class="box-list" box-index="${countSong}" box-artist-index="${i + 1}" artist_name="${ArtistMusic[artistIndex - 1].artist_name}"> 
+      Btn_green.addEventListener('click', () => {
+        musicIndex = 1;
+        RemoveMusicState();
+        saveMusicState();
+        // ให้เคลียร์ข้อมูลใน Queue ก่อนทุกครั้งที่มีการคลิก     /// เมื่อกี้กลับมาไล่โค้ดตัวเอง งงเลยตัวเองเขียนไรวะ ดีนะเม้นใว้
+        if (!checkIfAllMatch() || (Taglist.innerHTML === '')) {
+          Taglist.innerHTML = '';
+
+          isPlaylistCondition = false;// เปิดการใช้งานในเงื่อนไขของ Playlist
+          isSpecialCondition = true;
+          // วนลูปเพื่อเพิ่มเพลงของศิลปินที่ถูกเลือกเข้าไปใน Queue
+          let countSong = 1;
+          allMusic.forEach((music, i) => {
+            if (music.artist === ArtistMusic[artistIndex - 1].artist_name) {
+              let boxlist = `<div class="box-list" box-index="${countSong}" box-artist-index="${i + 1}" artist_name="${ArtistMusic[artistIndex - 1].artist_name}"> 
                                   <a href="#" class="for-select"></a>
                                   <audio class="${music.src}" id="NOW${music.src}" src="../music/${music.src}"></audio>
                                   <div class="playing"></div>
@@ -999,53 +1007,53 @@ function RemoveMusicState() {
                                       <span>${music.artist}</span>
                                   </div>
                                 </div>`;
-                Taglist.insertAdjacentHTML("beforeend", boxlist);
-                countSong++;
-              }
-            });
-            if(!(Taglist.innerHTML === '')){
-              playingNow(); 
-              updateImageQueue(filterArtist(artistName));
-              loadMusicByArtist(musicIndex, artistName);
+              Taglist.insertAdjacentHTML("beforeend", boxlist);
+              countSong++;
             }
-            else{
-              RemoveMusicState();
-            }
+          });
+          if (!(Taglist.innerHTML === '')) {
+            playingNow();
+            updateImageQueue(filterArtist(artistName));
+            loadMusicByArtist(musicIndex, artistName);
           }
-          isMusicPaused = music_box.classList.contains("paused");
-
-          if(!(Taglist.innerHTML === '')){
-            if(!follow_green){
-              updateImageQueue(filterArtist(artistName));
-              follow_green = true;
-              MusicPlayer.playMusic();
-              togglePlayStop();
-              Btn_green.classList.remove("ri-pause-circle-fill");
-              Btn_green.classList.remove("ri-play-circle-fill");
-              Btn_green.classList.add("ri-pause-circle-fill");
-
-              const icon = playPauseBtn.querySelector("i"); 
-              icon.classList.remove("ri-pause-circle-fill");
-              icon.classList.remove("ri-play-circle-fill");
-              icon.classList.add("ri-pause-circle-fill");
-            }else{
-              isMusicPaused ? MusicPlayer.pauseMusic() : MusicPlayer.playMusic();
-              togglePlayStop();
-              Btn_insite();
-            }
-          }
-          else{
+          else {
             RemoveMusicState();
           }
+        }
+        isMusicPaused = music_box.classList.contains("paused");
+
+        if (!(Taglist.innerHTML === '')) {
+          if (!follow_green) {
+            updateImageQueue(filterArtist(artistName));
+            follow_green = true;
+            MusicPlayer.playMusic();
+            togglePlayStop();
+            Btn_green.classList.remove("ri-pause-circle-fill");
+            Btn_green.classList.remove("ri-play-circle-fill");
+            Btn_green.classList.add("ri-pause-circle-fill");
+
+            const icon = playPauseBtn.querySelector("i");
+            icon.classList.remove("ri-pause-circle-fill");
+            icon.classList.remove("ri-play-circle-fill");
+            icon.classList.add("ri-pause-circle-fill");
+          } else {
+            isMusicPaused ? MusicPlayer.pauseMusic() : MusicPlayer.playMusic();
+            togglePlayStop();
+            Btn_insite();
+          }
+        }
+        else {
+          RemoveMusicState();
+        }
       });
 
-       
-                          
+
+
       // ตรงนีเป็นส่วนของการ เปลี่นนรูปเวลาที่มีการคลิกแต่ละเพลง
-      let someListImage = `<img src="../img/${ArtistMusic[index].img_file}">`;
-      let somePlaylist_title  = `<p>playlist</p>
-                                  <h1 class="artist">${ArtistMusic[index].artist_name}</h1>
-                                  <p class="associate-artist">${ArtistMusic[index].artist_name} , Musketeers ,follow and more</p>
+      let someListImage = `<img src="../img/${ArtistMusic[artistIndex-1].img_file}">`;
+      let somePlaylist_title = `<p>playlist</p>
+                                  <h1 class="artist">${ArtistMusic[artistIndex-1].artist_name}</h1>
+                                  <p class="associate-artist">${ArtistMusic[artistIndex-1].artist_name} , Musketeers ,follow and more</p>
                                   <div class="detail">
                                       <i class="ri-music-fill"></i>Spotify
                                       <span>•</span>
@@ -1059,7 +1067,7 @@ function RemoveMusicState() {
       allMusic.forEach((music, i) => {
         // console.log(music.artist);
         // console.log(ArtistMusic[artistIndex-1].artist_name);
-        if (music.artist === ArtistMusic[artistIndex-1].artist_name) {
+        if (music.artist === ArtistMusic[artistIndex - 1].artist_name) {
           const Personal_artist_list = `<div class="box-music-list" id="box-music-list${music.song_id}">
                                             <div class="title-of-song">
                                                 <label class="cl-checkbox" id="cl-checkbox${music.song_id}">
@@ -1099,77 +1107,77 @@ function RemoveMusicState() {
                                             </div>
                                         </div>`;
 
-            Song_serial_number += 1;             
+          Song_serial_number += 1;
           // เพิ่ม HTML สำหรับแต่ละเพลงลงใน all_music_list
-            all_music_list.insertAdjacentHTML("beforeend", Personal_artist_list);
+          all_music_list.insertAdjacentHTML("beforeend", Personal_artist_list);
 
 
-            let liAudioTag = all_music_list.querySelector(`.SONG${music.song_id}`);
-            let liAudioDuration = all_music_list.querySelector(`#SONG${music.song_id}`);
-            // console.log(liAudioTag);
-            liAudioTag.addEventListener("loadeddata", () => {
-              let audioDuration = liAudioTag.duration;
-              let totalMin = Math.floor(audioDuration / 60);
-              let totalSec = Math.floor(audioDuration % 60);
-        
-              if (totalSec < 10) {
-                totalSec = `0${totalSec}`;
-              }
-        
-              liAudioDuration.innerText = `${totalMin}:${totalSec}`;
-            });
+          let liAudioTag = all_music_list.querySelector(`.SONG${music.song_id}`);
+          let liAudioDuration = all_music_list.querySelector(`#SONG${music.song_id}`);
+          // console.log(liAudioTag);
+          liAudioTag.addEventListener("loadeddata", () => {
+            let audioDuration = liAudioTag.duration;
+            let totalMin = Math.floor(audioDuration / 60);
+            let totalSec = Math.floor(audioDuration % 60);
+
+            if (totalSec < 10) {
+              totalSec = `0${totalSec}`;
+            }
+
+            liAudioDuration.innerText = `${totalMin}:${totalSec}`;
+          });
 
 
-            const cl_checkbox = document.getElementById(`cl-checkbox${music.song_id}`);
-            const inside_cl_checkbox = cl_checkbox.querySelector('#cl-on-check');
-            const heart_list = document.getElementById(`heart_list${music.song_id}`);
-            const inside_heart_list = heart_list.querySelector('#heart_on_check');
-            heart_list.style.opacity = '0';            // เมื่อเริ่มต้นทำงานกำหนดให้ heart_list เป็น"none"ก่อแ จนกว่าจะมีการ  hover จึงจะมีการแสดงผล
-            inside_cl_checkbox.opacity = '0'; 
+          const cl_checkbox = document.getElementById(`cl-checkbox${music.song_id}`);
+          const inside_cl_checkbox = cl_checkbox.querySelector('#cl-on-check');
+          const heart_list = document.getElementById(`heart_list${music.song_id}`);
+          const inside_heart_list = heart_list.querySelector('#heart_on_check');
+          heart_list.style.opacity = '0';            // เมื่อเริ่มต้นทำงานกำหนดให้ heart_list เป็น"none"ก่อแ จนกว่าจะมีการ  hover จึงจะมีการแสดงผล
+          inside_cl_checkbox.opacity = '0';
 
-            inside_heart_list.addEventListener('change', function() {
-              if (this.checked) {
-                heart_list.style.opacity = '1';
-              } else {
-                heart_list.style.opacity = '0';
-              }
-            });
-            inside_cl_checkbox.addEventListener('change',function(){
-              if (this.checked) {
-                cl_checkbox.style.opacity = '1';
-              } else {
-                cl_checkbox.style.opacity = '0';
-              }
-            });
-            const boxMusicList = document.querySelector(`#box-music-list${music.song_id}`);
-            boxMusicList.addEventListener('mouseover', function() { // เมื่อนำเมาส์ไป hover ที่ boxMusicList
-              const insideHeartList = heart_list.querySelector('#heart_on_check');
-              const InsideClcheckbox = cl_checkbox.querySelector('#cl-on-check');
-              if (!insideHeartList.checked) {
-                heart_list.style.opacity = '1';
-              }
-              if(!InsideClcheckbox.checked){
-                cl_checkbox.style.opacity = '1';
-              }
-            });
-            boxMusicList.addEventListener('mouseout', function() {  // เมื่อนำเมาส์ออกไป ที่ boxMusicList
-              const insideHeartList = heart_list.querySelector('#heart_on_check');
-              const InsideClcheckbox = cl_checkbox.querySelector('#cl-on-check');
-              if (!insideHeartList.checked) {
-                heart_list.style.opacity = '0';
-              }
-              if(!InsideClcheckbox.checked){
-                cl_checkbox.style.opacity = '0';
-              }
-            });
+          inside_heart_list.addEventListener('change', function () {
+            if (this.checked) {
+              heart_list.style.opacity = '1';
+            } else {
+              heart_list.style.opacity = '0';
+            }
+          });
+          inside_cl_checkbox.addEventListener('change', function () {
+            if (this.checked) {
+              cl_checkbox.style.opacity = '1';
+            } else {
+              cl_checkbox.style.opacity = '0';
+            }
+          });
+          const boxMusicList = document.querySelector(`#box-music-list${music.song_id}`);
+          boxMusicList.addEventListener('mouseover', function () { // เมื่อนำเมาส์ไป hover ที่ boxMusicList
+            const insideHeartList = heart_list.querySelector('#heart_on_check');
+            const InsideClcheckbox = cl_checkbox.querySelector('#cl-on-check');
+            if (!insideHeartList.checked) {
+              heart_list.style.opacity = '1';
+            }
+            if (!InsideClcheckbox.checked) {
+              cl_checkbox.style.opacity = '1';
+            }
+          });
+          boxMusicList.addEventListener('mouseout', function () {  // เมื่อนำเมาส์ออกไป ที่ boxMusicList
+            const insideHeartList = heart_list.querySelector('#heart_on_check');
+            const InsideClcheckbox = cl_checkbox.querySelector('#cl-on-check');
+            if (!insideHeartList.checked) {
+              heart_list.style.opacity = '0';
+            }
+            if (!InsideClcheckbox.checked) {
+              cl_checkbox.style.opacity = '0';
+            }
+          });
 
-            
-            
-            // ------------------------------------------------------------------
-            // ตรงนี้เป็นส่วนในการทำ pop-up ต่างๆ เอามาใว้ข้างในเพราะ มันมองไม่เห็น class manage-song
-            // ----------------------------------------------------------------
-           
-            triggerOpen();
+
+
+          // ------------------------------------------------------------------
+          // ตรงนี้เป็นส่วนในการทำ pop-up ต่างๆ เอามาใว้ข้างในเพราะ มันมองไม่เห็น class manage-song
+          // ----------------------------------------------------------------
+
+          triggerOpen();
         }
       });
       // ---------------------------------------------
@@ -1178,7 +1186,7 @@ function RemoveMusicState() {
       let SelectID = [];
       let SelectIMG = [];
       let SelectMUSIC = [];
-      const select_delete  = document.querySelector('.select_delete');
+      const select_delete = document.querySelector('.select_delete');
       const checkboxId = document.querySelectorAll('#cl-on-check');
       const Delete_id_select = document.querySelector('.Delete-id-select');
       const Delete_img_select = document.querySelector('.Delete-img-select');
@@ -1187,19 +1195,19 @@ function RemoveMusicState() {
         SelectID = [];
         SelectIMG = [];
         SelectMUSIC = [];
-        checkboxId.forEach(content =>{
+        checkboxId.forEach(content => {
           let CHK_ID = content.getAttribute('checkboxID');
           let CHK_IMG = content.getAttribute('checkboxImg');
           let CHK_MUSIC = content.getAttribute('checkboxMusic');
-          if(content.checked){
+          if (content.checked) {
             SelectID.push(CHK_ID);
             SelectIMG.push(CHK_IMG);
             SelectMUSIC.push(CHK_MUSIC);
           };
         });
-        Delete_id_select.setAttribute("value",SelectID);
-        Delete_img_select.setAttribute("value",SelectIMG);
-        Delete_music_select.setAttribute("value",SelectMUSIC);
+        Delete_id_select.setAttribute("value", SelectID);
+        Delete_img_select.setAttribute("value", SelectIMG);
+        Delete_music_select.setAttribute("value", SelectMUSIC);
       });
       // -----------------------------
       // แยกส่วนของแต่ละ edit-song
@@ -1223,18 +1231,18 @@ function RemoveMusicState() {
           const EditImgSong = document.createElement('img');
 
           const EditSongIndex = Edit_song.getAttribute("edit-song-index");
-          const edit_song_name  = Edit_song.getAttribute("edit-song-name");
+          const edit_song_name = Edit_song.getAttribute("edit-song-name");
           const edit_img_song = Edit_song.getAttribute("edit-img-song");
           const file_song = Edit_song.getAttribute("edit-file-song");
 
           Edit_song_header.innerHTML = `<h2><span>Edit</span> | ${edit_song_name}</h2>`
 
           custum_Edit_song_upload.appendChild(EditImgSong);
-          inputEditNamesong.setAttribute("value",`${edit_song_name}`);
-          song_id_on_edit.setAttribute("value",`${EditSongIndex}`);
-          old_img_song.setAttribute("value",`${edit_img_song}`);
-          old_file_song.setAttribute("value",`${file_song}`);
-          EditImgSong.setAttribute('src',`../img_song/${edit_img_song}`);
+          inputEditNamesong.setAttribute("value", `${edit_song_name}`);
+          song_id_on_edit.setAttribute("value", `${EditSongIndex}`);
+          old_img_song.setAttribute("value", `${edit_img_song}`);
+          old_file_song.setAttribute("value", `${file_song}`);
+          EditImgSong.setAttribute('src', `../img_song/${edit_img_song}`);
 
         });
       });
@@ -1248,16 +1256,16 @@ function RemoveMusicState() {
       const Delete_img_song_input = Delete_song_popup.querySelector('.Delete-img-song-input');
       const Delete_src_song_input = Delete_song_popup.querySelector('.Delete-src-song-input');
       Delete_song_button.forEach(Delete_song => {
-        Delete_song.addEventListener('click',() => {
-          Delete_index =  Delete_song.getAttribute("delete-song-index");
-          Delete_name =  Delete_song.getAttribute("delete-song-name");
-          Delete_img = Delete_song.getAttribute("delete-img-song");
-          Delete_music_file = Delete_song.getAttribute("delete-file-song");
+        Delete_song.addEventListener('click', () => {
+          let Delete_index = Delete_song.getAttribute("delete-song-index");
+          let Delete_name = Delete_song.getAttribute("delete-song-name");
+          let Delete_img = Delete_song.getAttribute("delete-img-song");
+          let Delete_music_file = Delete_song.getAttribute("delete-file-song");
 
           Update_Delete_Name.innerHTML = `${Delete_name}`;
-          Delete_confirm_input.setAttribute("value",`${Delete_index}`);
-          Delete_img_song_input.setAttribute("value",`${Delete_img}`);
-          Delete_src_song_input.setAttribute("value",`${Delete_music_file}`);
+          Delete_confirm_input.setAttribute("value", `${Delete_index}`);
+          Delete_img_song_input.setAttribute("value", `${Delete_img}`);
+          Delete_src_song_input.setAttribute("value", `${Delete_music_file}`);
         });
       });
 
@@ -1266,7 +1274,7 @@ function RemoveMusicState() {
       // ส่วนของการทำวันที่ ในตอนที่add-song หรือ เพลงเข้ามา
       // --------------------------------------------------
       const dateAddonElement = document.querySelectorAll(".Date-add-on-list");
-      for(i = 0; i < filterArtist(artistName).length; i++){
+      for (i = 0; i < filterArtist(artistName).length; i++) {
         // หาว่าเพลงถูกเพิ่มลงไปแล้วกี่วัน
         const artistDate = new Date(filterArtist(artistName)[i].DateAdded);
         const diffTime = Math.abs(songAddedDate - artistDate);
@@ -1279,7 +1287,7 @@ function RemoveMusicState() {
 
       playlist_image.innerHTML = someListImage;
       playlist_title.innerHTML = somePlaylist_title;
-      
+
       Goto_page_list.classList.add('active');
       container_top.classList.add("active");
       Goto_search_page.classList.remove('active');
@@ -1288,83 +1296,80 @@ function RemoveMusicState() {
   });
 
 
-// -------------------------------------------------
-// ส่วนของการทำวันที่ ในตอนที่add-artist หรือ เพลงเข้ามา
-// --------------------------------------------------
+  // -------------------------------------------------
+  // ส่วนของการทำวันที่ ในตอนที่add-artist หรือ เพลงเข้ามา
+  // --------------------------------------------------
 
-const dateAddonElement = document.querySelectorAll(".Date-add-on");
-for(i = 0; i < ArtistMusic.length; i++){
-  // หาว่าเพลงถูกเพิ่มลงไปแล้วกี่วัน
-  const artistDate = new Date(ArtistMusic[i].Artist_date);
+  const dateAddonElement = document.querySelectorAll(".Date-add-on");
+  for (i = 0; i < itemOfSearch.length; i++) {
+    // หาว่าเพลงถูกเพิ่มลงไปแล้วกี่วัน
+    const artistDate = new Date(itemOfSearch[i].Artist_date);
 
-  const diffTime = Math.abs(songAddedDate - artistDate);
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  // แสดงผลลัพธ์ในส่วนของ "Date-add-on"
-  dateAddonElement[i].innerHTML = `<span>${diffDays} day${diffDays !== 1 ? 's' : ''} ago</span>`;
-}
-
-
+    const diffTime = Math.abs(songAddedDate - artistDate);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    // แสดงผลลัพธ์ในส่วนของ "Date-add-on"
+    dateAddonElement[i].innerHTML = `<span>${diffDays} day${diffDays !== 1 ? 's' : ''} ago</span>`;
+  }
 
 
-
-// ----------------------------------------------------------------------
-// function ที่ใช้ในการเปลี่ยนหน้า 1,2,3,..~
-// pagination ของ upload content  
-// ----------------------------------------------------------------------
+  // ----------------------------------------------------------------------
+  // function ที่ใช้ในการเปลี่ยนหน้า 1,2,3,..~
+  // pagination ของ upload content  
+  // ----------------------------------------------------------------------
 
   let thisPage = 1;
   let limit = 8;
-  function loadItem(){
+  function loadItem() {
     let beginGet = limit * (thisPage - 1);
     let endGet = limit * thisPage - 1;
-    uploadContents.forEach((item, key)=>{
-        if(key >= beginGet && key <= endGet){
-            item.style.display = 'flex';
-        }else{
-            item.style.display = 'none';
-        }
+    uploadContents.forEach((item, key) => {
+      if (key >= beginGet && key <= endGet) {
+        item.style.display = 'flex';
+      } else {
+        item.style.display = 'none';
+      }
     })
     listPage();
   }
   loadItem();
-  
-  function listPage(){
+
+  function listPage() {
     let count = Math.ceil(uploadContents.length / limit);
     document.querySelector('.pagination-container').innerHTML = '';
-  
-    if(thisPage != 1){
-        let prev = document.createElement('li');
-        prev.innerText = 'PREV';
-        prev.addEventListener('click', function() {
-          changePage(thisPage - 1);
-        });
-        document.querySelector('.pagination-container').appendChild(prev);
+
+    if (thisPage != 1) {
+      let prev = document.createElement('li');
+      prev.innerText = 'PREV';
+      prev.addEventListener('click', function () {
+        changePage(thisPage - 1);
+      });
+      document.querySelector('.pagination-container').appendChild(prev);
     }
-  
-    for(let i = 1; i <= count; i++){
-        let newPage = document.createElement('li');
-        newPage.innerText = i;
-        if(i === thisPage){
-            newPage.classList.add('active');
-        }
-        newPage.addEventListener('click', function() {
-          changePage(i);
-        });
-        document.querySelector('.pagination-container').appendChild(newPage);
+
+    for (let i = 1; i <= count; i++) {
+      let newPage = document.createElement('li');
+      newPage.innerText = i;
+      if (i === thisPage) {
+        newPage.classList.add('active');
+      }
+      newPage.addEventListener('click', function () {
+        changePage(i);
+      });
+      document.querySelector('.pagination-container').appendChild(newPage);
     }
-  
-    if(thisPage != count){
-        let next = document.createElement('li');
-        next.innerText = 'NEXT';
-        next.addEventListener('click', function() {
-          changePage(thisPage + 1);
-        });
-        document.querySelector('.pagination-container').appendChild(next);
+
+    if (thisPage != count) {
+      let next = document.createElement('li');
+      next.innerText = 'NEXT';
+      next.addEventListener('click', function () {
+        changePage(thisPage + 1);
+      });
+      document.querySelector('.pagination-container').appendChild(next);
     }
-  
+
     const paginationItems = document.querySelectorAll('.pagination-container li');
     paginationItems.forEach(item => {
-      item.addEventListener('click', function() {
+      item.addEventListener('click', function () {
         paginationItems.forEach(element => {
           element.classList.remove('active');
         });
@@ -1372,37 +1377,41 @@ for(i = 0; i < ArtistMusic.length; i++){
       });
     });
   }
-  
-  function changePage(i){
+
+  function changePage(i) {
     thisPage = i;
     loadItem();
   }
-  
 
+  triggerOpen();
+};
+
+
+displayArtistItem(ArtistOfSort);
 
 
 // ------------------------------------------------------------------
 // ตรงนี้เป็นส่วนในการทำ pop-up ต่างๆ
 // ----------------------------------------------------------------
-function triggerOpen(){
+function triggerOpen() {
   const triggerOpen = document.querySelectorAll('[trigger-button]');
   const triggerClose = document.querySelectorAll('[close-button]');
   const overlay = document.querySelector('[data-overlay]');
-  for(let i = 0; i<triggerOpen.length; i++){
-      let currentId = triggerOpen[i].dataset.target,
+  for (let i = 0; i < triggerOpen.length; i++) {
+    let currentId = triggerOpen[i].dataset.target,
       targetEl = document.querySelector(`#${currentId}`)
 
-      const openData = function(){
-          targetEl.classList.remove('active');
-          overlay.classList.remove('active');
-      };
-      triggerOpen[i].addEventListener('click',function(){
-          targetEl.classList.add('active');
-          overlay.classList.add('active');
-      });
-      
-      targetEl.querySelector('[close-button]').addEventListener('click',openData);
-      overlay.addEventListener('click',openData);
+    const openData = function () {
+      targetEl.classList.remove('active');
+      overlay.classList.remove('active');
+    };
+    triggerOpen[i].addEventListener('click', function () {
+      targetEl.classList.add('active');
+      overlay.classList.add('active');
+    });
+
+    targetEl.querySelector('[close-button]').addEventListener('click', openData);
+    overlay.addEventListener('click', openData);
   };
 }
 triggerOpen();

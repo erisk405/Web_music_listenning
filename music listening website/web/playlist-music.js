@@ -5,7 +5,11 @@
 // เนื่องจากไม่อยากให้ไม่มีการโหลดหรือรีเฟรชหน้า webpage จึงต้องเขียนfunction ในการ fetch API มาจากDatabases
 // การทำงาน addPlaylist() คือ จะเป็นการCreate playlist ขึ้นมาใหม่ จากนั้นก็จะนำข้อมูลไปเก็บใว้ที่ databases
 
-
+const all_music_list = document.querySelector('.all-music-list');
+const header_on_playlist = Goto_page_list.querySelector('.wrapper-playlist'),
+playlist_image = header_on_playlist.querySelector('.playlist-image'),
+playlist_title = header_on_playlist.querySelector('.playlist-title'),
+playlist_nav = document.querySelector('.playlist-nav');
 function addPlaylist(category_id) {
   const displayData = document.getElementById(`wrapper-playlist${category_id}`),
     carousel_item_normal = displayData.querySelector(".wrapper.swiper-wrapper");
@@ -847,7 +851,7 @@ async function fetchAddSongPlaylist(playlist_id) {//เหมือนกับ 
         // ----------------------------------------------
         // ส่วนที่ใช้ในการทำ Search เพลง และ Add เพลง เข้ามา 
         // ----------------------------------------------
-        const MusicOfSort = [...new Set(sortedSongs.map((item) => { return item }))]
+        const MusicOfSort = [...new Set(sortedSongs.map((item) => { return item }))] //... ใช้เพื่อแปลง Set กลับเป็น Array
         const SearchOfSong = document.getElementById('Search_Song');
         const insert_song_main_wrapper = document.querySelector('.insert_song-main_wrapper');
         SearchOfSong.addEventListener('keyup', (e) => {

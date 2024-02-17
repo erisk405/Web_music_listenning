@@ -40,25 +40,9 @@
         else{
             echo "ไม่พบไฟล์รูปภาพของArtist";
         }
-        $sql_songs = "SELECT Songs_filename,Songs_imgfilename FROM songs WHERE artist_id = $artist_id_to_delete";
-        $result_songs = $conn->query($sql_songs);
-        if ($result_songs->num_rows > 0) {
-            while ($row = $result_songs->fetch_assoc()) {
-                $song_file_to_delete = "../music/".$row['Songs_filename'];
-                $song_img_to_delete = "../img_song/".$row['Songs_imgfilename'];
-                if (file_exists($song_file_to_delete) && file_exists($song_img_to_delete)) {
-                    unlink($song_file_to_delete);
-                    unlink($song_img_to_delete);
-                    echo "ลบไฟล์ $song_file_to_delete เรียบร้อยแล้ว";
-                } else {
-                    echo "ไม่พบไฟล์เพลง: $song_file_to_delete";
-                }
-            }
-        }
         $sql_Artist = "DELETE FROM artists WHERE artist_id = $artist_id_to_delete";
-        $sql_Songs = "DELETE FROM songs WHERE artist_id = $artist_id_to_delete";
 
-        if ($conn -> query($sql_Artist) && $conn -> query($sql_Songs)){
+        if ($conn -> query($sql_Artist)){
             header("Location: Home.php");
         }else{
             echo "ลบไม่สำเร็จ";
