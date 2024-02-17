@@ -777,10 +777,25 @@ const displayArtistItem = (itemOfSearch) => {
   const Delete_artist_popup = document.getElementById('Delete-artist-popup');
   const Update_Delete_Name_artist = Delete_artist_popup.querySelector('.header-delete span');
   const Delete_artist_button = document.querySelectorAll('.dlt-button');
-  const Delete_artist_input = document.querySelector('.Delete-artist-input');
-  const Input_delete_artist_img = Delete_artist_popup.querySelector('.Input-delete-artist-img');
+  const Delete_confirm_artist = Delete_artist_popup.querySelector('.Delete-confirm');
   Delete_artist_button.forEach(Delete_artist => {
     Delete_artist.addEventListener('click', () => {
+
+      Delete_confirm_artist.innerHTML =  // Clear ข้อมูลก่อน
+      `<div class="alert-Delete">
+      </div>
+      <div class="form">
+          <input class="Input-delete-artist-img" hidden name="Delete-artist-img">
+          <input class="Delete-artist-input" hidden name="Delete-artist-input">
+          <a href="#" class="cancel-confirm" close-button >Cancle</a>
+          <button class ="Delete-Artist-from-upload">Confirm</button>
+      </div>`;
+
+      const Input_delete_artist_img = Delete_artist_popup.querySelector('.Input-delete-artist-img');
+      const Delete_artist_input = document.querySelector('.Delete-artist-input');
+      const Delete_Artist_from_upload = document.querySelector('.Delete-Artist-from-upload');
+      const alert_Delete = document.querySelector('.alert-Delete');
+       
       let Delete_artist_name = Delete_artist.getAttribute("name-delete-button");
       let Delete_artist_id = Delete_artist.getAttribute("delete-id-artist");
       let Delete_artist_img = Delete_artist.getAttribute("delete-img-artist");
@@ -788,6 +803,28 @@ const displayArtistItem = (itemOfSearch) => {
       Update_Delete_Name_artist.innerHTML = `${Delete_artist_name}`;
       Input_delete_artist_img.setAttribute("value", `${Delete_artist_img}`);
       Delete_artist_input.setAttribute("value", `${Delete_artist_id}`);
+      
+
+      Delete_Artist_from_upload.addEventListener('click', () =>{
+        let formdata = new FormData();
+        formdata.append("Delete-artist-img",Delete_artist_img)
+        formdata.append("Delete-artist-input",Delete_artist_id)
+        fetch("../web/delete_form.php",{
+          method: "POST",
+          body : formdata
+        })
+        .then(Response =>{
+          if(!Response.ok){
+            throw new Error("response was not ok in Delete_artist_button")
+          }else if(Response.ok){
+            location.reload();
+          }
+        })
+        .catch(error =>{
+          alert_Delete.innerHTML = "<p>Can not delete !!, <br>Because there are still songs from this artist.</p>"
+          console.error("Error",error)
+        })
+      })
     });
   });
 

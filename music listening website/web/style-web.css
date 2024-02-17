@@ -2818,7 +2818,9 @@ footer {
 /* ------------------------- */
 /*      Delete song popup    */
 /* ------------------------- */
-
+.alert-Delete{
+  color: var(--red-color);
+}
 .Delete-song-popup.active,
 .Delete-artist-popup.active,
 .Delete-select-popup.active ,
@@ -2870,7 +2872,7 @@ footer {
   justify-content: center;
   align-items: flex-start;
   margin-bottom: 10px;
-  width: 350px;
+  width: 400px;
 }
 .Delete-song-popup .Delete-confirm,
 .Delete-artist-popup .Delete-confirm ,
@@ -2880,7 +2882,7 @@ footer {
   width: 100%;
 }
 .Delete-song-popup .Delete-confirm form,
-.Delete-artist-popup .Delete-confirm form ,
+.Delete-artist-popup .Delete-confirm .form ,
 .Delete-select-popup .Delete-confirm form,
 .Delete-song-popup-onlist .Delete-confirm form,
 .Delete-category .Delete-confirm form{
@@ -2889,7 +2891,7 @@ footer {
   align-items: center;
 }
 .Delete-song-popup .Delete-confirm form a:hover,
-.Delete-artist-popup .Delete-confirm form a:hover ,
+.Delete-artist-popup .Delete-confirm .form a:hover ,
 .Delete-select-popup .Delete-confirm form a:hover,
 .Delete-song-popup-onlist .Delete-confirm form a:hover,
 .Delete-category .Delete-confirm form a:hover{
@@ -2898,7 +2900,7 @@ footer {
   scale: 1.05;
 }
 .Delete-song-popup .Delete-confirm form a:active,
-.Delete-artist-popup .Delete-confirm form a:active ,
+.Delete-artist-popup .Delete-confirm .form a:active ,
 .Delete-select-popup .Delete-confirm form a:active,
 .Delete-song-popup-onlist .Delete-confirm form a:active,
 .Delete-category .Delete-confirm form a:active{
@@ -2943,7 +2945,7 @@ footer {
   scale: 0.9;
 }
 .Delete-song-popup .Delete-confirm button[type="submit"],
-.Delete-artist-popup .Delete-confirm button[type="submit"] ,
+.Delete-artist-popup .Delete-confirm button,
 .Delete-select-popup .Delete-confirm button[type="submit"],
 .Delete-song-popup-onlist .Delete-confirm button,
 .Delete-category .Delete-confirm button{
@@ -3415,6 +3417,60 @@ input:hover {
   white-space: nowrap;
 }
 
+
+
+
+/* ------------------------ */
+/*      Logout-popup      */
+/* ------------------------ */
+.logout-popup.active{
+  display: block;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  z-index: 9999999999;
+}
+.logout-popup{
+  display: none;
+}
+.container-logout h2{
+  color: white;
+  padding-bottom: 10px;
+}
+.container-logout{
+  width: 350px;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: var(--backgourd-popup);
+}
+.container-logout form{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.container-logout form a{
+  color: white;
+  cursor: pointer;
+}
+.container-logout form a:hover{
+  color: var(--red-color);
+}
+.container-logout form button.confirm{
+  border: none;
+  outline: none;
+  padding: 5px 10px;
+  border-radius: 40px;
+  background-color: var(--green-color);
+  color: var(--white-color);
+  transition: all .1s ease-in-out;
+}
+.container-logout form button.confirm:hover{
+  scale: 1.05;
+}
+.container-logout form button.confirm:active{
+  scale: 0.95;
+}
 
 @media screen and (max-width: 1220px) {
   .insite_the_playlist .nav-title .Date-add {

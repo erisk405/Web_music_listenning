@@ -29,26 +29,32 @@
         echo "ไม่พบ";
     }
     // ตรงนี้เป็นส่วนของการ Delete-artist
-    if(isset($_POST) && isset($_POST['Delete-artist-input'])){
-        $artist_id_to_delete = $_POST['Delete-artist-input'];
-        $File_img_name  = $_POST['Delete-artist-img'];
-        $dir = "../img/";
-        if(file_exists($dir.$File_img_name)){
-            unlink($dir.$File_img_name);
-            echo "ลบไฟล์ $dir.$File_img_name เรียบร้อยแล้ว";
+    try {
+        if(isset($_POST) && isset($_POST['Delete-artist-input'])){
+            $artist_id_to_delete = $_POST['Delete-artist-input'];
+            $File_img_name  = $_POST['Delete-artist-img'];
+            $dir = "../img/";
+    
+            $sql_Artist = "DELETE FROM artists WHERE artist_id = $artist_id_to_delete";
+            $result = mysqli_query($conn, $sql_Artist);
+            
+            if ($result) {
+                if(file_exists($dir.$File_img_name)){
+                    unlink($dir.$File_img_name);
+                    echo "ลบไฟล์ $dir.$File_img_name เรียบร้อยแล้ว";
+                } else {
+                    echo "ไม่พบไฟล์รูปภาพของ Artist";
+                }
+            } else {
+                echo "ลบไม่สำเร็จ";
+            }
+        } else {
+            echo "ไม่พบ";
         }
-        else{
-            echo "ไม่พบไฟล์รูปภาพของArtist";
-        }
-        $sql_Artist = "DELETE FROM artists WHERE artist_id = $artist_id_to_delete";
-
-        if ($conn -> query($sql_Artist)){
-            header("Location: Home.php");
-        }else{
-            echo "ลบไม่สำเร็จ";
-        }
-    }else{
-        echo "ไม่พบ";
+    } catch (Exception $e) {
+        http_response_code(500);
+        echo 'Error: ' . $e->getMessage();
     }
+    
 
 ?>

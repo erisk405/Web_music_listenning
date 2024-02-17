@@ -36,7 +36,6 @@ while($row = $result_song -> fetch_assoc()){
         'song_id' => $row['song_id'],
         'artist_id' => $row['artist_id'],
         'artist' => $row['artist_name'],
-        'song_likes' => $row['song_likes'],
         'name' => $row['song_title'],
         'src' => $row['Songs_filename'],
         'img' => $row['Songs_imgfilename'],
@@ -181,7 +180,7 @@ while($row = $result_song -> fetch_assoc()){
                                     <i class="ri-add-circle-line"></i>
                                     <a href="#">upload</a>
                                 </div>
-                                <div class="logout">
+                                <div class="logout" trigger-button data-target="logout-popup">
                                     <button>logout</button>
                                 </div>
                                 <div class="user">
@@ -708,15 +707,17 @@ while($row = $result_song -> fetch_assoc()){
     <div class="Delete-artist-popup" id="Delete-artist-popup">
         <div class="header-delete">
             <h2>Delete <span>artist</span> ?</h2>
-            <p>Please make sure If you delete this artist This will cause all songs by this artist to be deleted.</p>
+            <p>Please make sure If you delete this artist, You should Delete all music of this artist</p>
         </div>
         <div class="Delete-confirm">
-            <form action="delete_form.php" method="POST">
+            <div class="alert-Delete">
+            </div>
+            <div class="form">
                 <input class="Input-delete-artist-img" hidden name="Delete-artist-img">
                 <input class="Delete-artist-input" hidden name="Delete-artist-input">
                 <a href="#" class="cancel-confirm" close-button >Cancle</a>
-                <button type="submit">Confirm</button>
-            </form>
+                <button class ="Delete-Artist-from-upload">Confirm</button>
+            </div>
         </div>
     </div>
     <div class="Delete-song-popup" id="Delete-song-popup">
@@ -834,6 +835,17 @@ while($row = $result_song -> fetch_assoc()){
             </form>
         </div>
     </div>
+
+    <div class="logout-popup" id="logout-popup">
+        <div class="container-logout">
+            <h2>Please confirm</h2>
+            <form action="../web/Logout.php">
+                <a close-button>Cencle</a>
+                <button class="confirm" type="submit">Confirm</button>
+            </form>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>var allMusic = <?php echo json_encode($songs); ?>;</script>
     <script>var ArtistMusic = <?php echo json_encode($artist); ?>;</script>
