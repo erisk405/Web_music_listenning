@@ -104,7 +104,7 @@ while($row = $result_song -> fetch_assoc()){
                             <form action="">
                                 <div class="wrap-library">
                                     <a href="#" id="search-library"><i class="ri-search-line"></i></a>
-                                    <input type="text" name="" id="search-item" placeholder="Search name">
+                                    <input type="search" name="" id="search-item" placeholder="Search name">
                                 </div>
                                 <div class="filter">
                                     <a href="#" id=""><i class="ri-filter-3-line"></i></a>
@@ -506,9 +506,9 @@ while($row = $result_song -> fetch_assoc()){
                     <div class="media-play">
                         <div class="top">
                             <a href="#" id="repeat"><i class="ri-repeat-2-line" title="Playlist looped"></i></a>
-                            <a href="#" id="skip-left"><i class="ri-skip-left-fill"></i></a>
-                            <a href="#" class="play-stop"><i class="ri-play-circle-fill"></i></a>
-                            <a href="#" id="skip-right"><i class="ri-skip-right-fill"></i></a>
+                            <a href="#" id="skip-left" title="Previous"><i class="ri-skip-left-fill"></i></a>
+                            <a href="#" class="play-stop" title="Pause"><i class="ri-play-circle-fill"></i></a>
+                            <a href="#" id="skip-right" title="Next"><i class="ri-skip-right-fill"></i></a>
                             <a href="#" id="download-cloud"><i class="ri-download-cloud-line"></i></a>
                         </div>
                     </div>
@@ -794,7 +794,7 @@ while($row = $result_song -> fetch_assoc()){
                 ></path>
                 </g>
             </svg>
-            <input class="input" type="search" placeholder="Search" />
+            <input id="Search_Add_artist" class="input" type="search" placeholder="Search" />
         </div>
         <div class="artist-box-content">
             <div class="title-info">

@@ -1623,46 +1623,65 @@ const catagory_btn = add_catagory_popup.querySelector('.catagory-btn button');
 const Select_artist_popup = document.getElementById('Select-artist-popup'),
   artist_box_content = Select_artist_popup.querySelector('.wrapper-box'),
   box_artist_playlist = artist_box_content.querySelectorAll('.box');
+
 document.addEventListener("DOMContentLoaded", function () {
   fetchInitialDataCategory();
   fetchInitialDataArtist();
   fetchInitialPrivateUserPlaylist(UserID);
-
-  ArtistMusic.forEach((item, i) => {
-    let box_artist = ` <div class="box">
-                              <div class="detail">
-                                  <div class="title-index">
-                                      <span>${i + 1}</span>
-                                  </div>
-                                  <div class="wrap-img">
-                                      <img src="../img/${item.img_file}" alt="">
-                                  </div>
-                                  <div class="wrap-name">
-                                      <span>${item.artist_name}</span>
-                                  </div>
-                              </div>
-                              <div class="add-to-playlist">
-                                  <a href="#"  id="playlist-link-${item.artist_id}" playlist-artist-index="${item.artist_id}">Add-to-playlist</a>
-                              </div>
-                          </div>`
-    artist_box_content.insertAdjacentHTML("beforeend", box_artist);
-
-    const playlistLink = document.getElementById(`playlist-link-${item.artist_id}`);
-    fetchInitialUseOrNot(playlistLink, item.artist_id);
-
-    playlistLink.addEventListener('click', function (event) {
-      event.preventDefault();
-      const artistId = this.getAttribute('playlist-artist-index');
-      if (playlistLink.classList.contains('being-used')) {
-        playlistLink.classList.remove('being-used');
-        playlistLink.classList.add('not-being-used');
-        playlistLink.innerText = 'Add-to-playlist';
-        DeleteOrAddPlaylistArtist(artistId);
-      } else {
-        UseOrNot(playlistLink, artistId, i);
-      }
-    });
+  // ------------------------------------------------------
+  // ส่วนในการทำการ Search ข้อมูลในการ Add  Artist เข้ามาใช้ 
+  // ------------------------------------------------------
+  const Select_artist_Sort = [... new Set(ArtistMusic.map((item ,index)=> ({...item ,index})))] 
+  const Search_Add_artist  = document.getElementById('Search_Add_artist');
+  Search_Add_artist.addEventListener('keyup', (e) =>{
+    const searchData = e.target.value.toLowerCase();
+    const filterData = Select_artist_Sort.filter((item) => {
+      return(
+        item.artist_name && item.artist_name.toLowerCase().includes(searchData)
+      )
+    })
+    DisplayAddArtist(filterData)
   });
+  const DisplayAddArtist = (item) =>{
+    artist_box_content.innerHTML = item.map((item) =>{
+      var {artist_name,artist_id,img_file,index} = item;
+      return(
+        ` <div class="box">
+            <div class="detail">
+              <div class="title-index">
+                <span>${index + 1}</span>
+              </div>
+              <div class="wrap-img">
+                <img src="../img/${img_file}" alt="">
+              </div>
+              <div class="wrap-name">
+                  <span>${artist_name}</span>
+              </div>
+            </div>
+          <div class="add-to-playlist">
+            <a href="#"  id="playlist-link-${artist_id}" playlist-artist-index="${artist_id}">Add-to-playlist</a>
+          </div>
+        </div>`
+      )
+    }).join('')
+      item.forEach(content =>{
+        const playlistLink = document.getElementById(`playlist-link-${content.artist_id}`);
+        fetchInitialUseOrNot(playlistLink, content.artist_id);
+        playlistLink.addEventListener('click', function (event) {
+          event.preventDefault();
+          const artistId = this.getAttribute('playlist-artist-index');
+          if (playlistLink.classList.contains('being-used')) {
+            playlistLink.classList.remove('being-used');
+            playlistLink.classList.add('not-being-used');
+            playlistLink.innerText = 'Add-to-playlist';
+            DeleteOrAddPlaylistArtist(artistId);
+          } else {
+            UseOrNot(playlistLink, artistId, content.index);
+          }
+        });
+      })
+  }
+  DisplayAddArtist(Select_artist_Sort); // ให้แสดงขอมูลก่อนที่จะ Search
 });
 
 catagory_btn.addEventListener('click', function (even) {
@@ -2226,24 +2245,37 @@ function fetchInitialPrivateUserPlaylist(UserID) { //  function ที่ใช�
       }
       return response.json();
     })
-    .then(data => {
-      form_playlist_private.innerHTML = ''
-      data.forEach(item => {
-        const playlistImage = item.playlist_image ? `../img_playlist/${item.playlist_image}` : '../img_playlist/music-icon.jpg';
-        const dot_title = item.playlist_name ? item.playlist_name : `playlist` + `${item.playlist_id}`
-        let listitem_var = `<a href="#">
-                                <li class="listitem" playlist_id = ${item.playlist_id}>
-                                    <img src="${playlistImage}" alt="">
-                                    <div class="detail">
-                                        <p>${dot_title}</p>
-                                        <span>Playlist | ${Username}</span>
-                                    </div>
-                                </li>
-                              </a>`;
-        form_playlist_private.insertAdjacentHTML("beforeend", listitem_var);
-      });
+    .then(data => { // ส่วนของการทำ Searching Private playlist หรือ User playlist
+      console.log(data)
+      const Mylibrary = [...new Set(data.map((item) => {return item}))];
+      const search_item = document.getElementById('search-item');
 
-      listItems_btn();
+      search_item.addEventListener('keyup',(e) =>{
+        const searchData = e.target.value.toLowerCase();
+        const filterData = Mylibrary.filter((item) =>{
+          return(
+            item.playlist_name && item.playlist_name.toLowerCase().includes(searchData)
+          )
+        })
+        displayInitialPrivate(filterData);
+      });
+      const displayInitialPrivate = (item) => {
+        form_playlist_private.innerHTML = item.map((item) => {
+          var {playlist_name,playlist_image,playlist_id} = item;
+          const playlistImage = playlist_image ? `../img_playlist/${playlist_image}` : '../img_playlist/music-icon.jpg';
+          const dot_title = playlist_name ? playlist_name : `playlist` + `${playlist_id}`
+          return(
+            `<a href="#">
+                <li class="listitem" playlist_id = ${playlist_id}>
+                  <img src="${playlistImage}" alt="">
+                  <div class="detail">
+                      <p>${dot_title}</p>
+                       <span>Playlist | ${Username}</span>
+                  </div>
+                </li>
+             </a>`
+          )
+        }).join('')
 
       const listitem_front = document.querySelectorAll('.listitem');
       listitem_front.forEach((content, index) => {
@@ -2433,6 +2465,11 @@ function fetchInitialPrivateUserPlaylist(UserID) { //  function ที่ใช�
             });
         });
       });
+      listItems_btn();
+      }
+
+      displayInitialPrivate(Mylibrary);
+
     })
     .catch(error => {
       console.error("Error", error)

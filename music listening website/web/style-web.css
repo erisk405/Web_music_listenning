@@ -273,7 +273,13 @@ h1 {
 /* ------------------ */
 
 .container-library {
+  position: relative;
   display: flex;
+}
+.container-library .wrap-library input{
+  position: absolute;
+  top: 2px;
+  left: 0px;
 }
 .container-library form {
   display: flex;
@@ -282,6 +288,7 @@ h1 {
   align-items: center;
 }
 .container-library .filter a i {
+  display: none;
   padding-right: 10px;
 }
 .container-library form input {
