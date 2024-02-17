@@ -918,6 +918,7 @@ async function fetchAddSongPlaylist(playlist_id) {//เหมือนกับ 
 }
 function fetchInitialPermalink() { /// function ที่ใช้เพื่อ showข้อมูลภายในหน้านั้นๆ
   let playlist_id_local = '';
+  OnplaylistSong = []; // ต้องเคลียร์ array ก่อน push ค่าเข้าไป
   const product_permalink_common = document.querySelectorAll(".product-permalink:not(.artist)");
   const Setting_detail_main = document.querySelector('.Setting-detail-main');
   const insert_song = document.querySelector('.insert_song');
@@ -1052,7 +1053,9 @@ function fetchInitialPermalink() { /// function ที่ใช้เพื่�
             const actions_playlist = document.querySelector(`.actions[actions_Playlist_id="${playlist_id_local}"]`); // ใช้ตัวแปรนี้เพื่อแทนปุ่มกดplay ที่อยู่ส่วน Hover playlist
             ClassListofButtonplaylist = ''; // ต้องใช้เพื่อเช็คจะส่ง  actions_playlist เพื่อใช้งาน function ToggleBtn_Allactions ที่อยู่ใน playPauseBtn
             ClassListofButtonplaylist = actions_playlist;
-            OnplaylistSong = []; // ต้องเคลียร์ array ก่อน push ค่าเข้าไป
+            if(SongOfPlaylist.length >0){// ถ้ามีข้อมูลก็ให้Clear ไม่มีก็ไม่ต้อง clear
+              OnplaylistSong = []; // ต้องเคลียร์ array ก่อน push ค่าเข้าไป
+            }
             const sortedSongs = SongOfPlaylist.map(playlistItem => {  // นำ song_id ที่อยู่ใน SongOfPlaylist  เพื่อกรอง array Allmusic ให้มีแค่ เพลงของ playlistนั้นๆ 
               const foundSong = allMusic.find(song => song.song_id === playlistItem.song_id); //และที่ต้องใช้ Map เนื่องจากมัน Return ค่ากลับมาได้
               OnplaylistSong.push(foundSong); // ต้องเก็บใว้ใน Array ที่เป็น global
@@ -1067,7 +1070,7 @@ function fetchInitialPermalink() { /// function ที่ใช้เพื่�
               isPrivatePlaylistCondition = false; // isPrivatePlaylistConditionเป็นเงื่อนไขที่ใช้แยก playlist ระหว่าง Admin และ User
               NowPlayingListSong = [];// ต้องเคลียร์ array ก่อน push ค่าเข้าไป
               NowPlayingListSong = playlist_id_local; // ใช้เพื่อนำมาเช็คว่า playlistไหนกำลังเล่นอยู่
-              sortedSongs.forEach((music, i) => {
+              OnplaylistSong.forEach((music, i) => {
                 let boxlist = `<div class="box-list" box-index="${countSong}" artist_name="${music.artist}" playlist_id="${playlist_id_local}"> 
                                         <a href="#" class="for-select"></a>
                                         <audio class="${music.src}" id="NOW${music.src}" src="../music/${music.src}"></audio>
@@ -1158,6 +1161,7 @@ function addSongToPlaylist(playlist_id, song_id, indexLenth) { //function ที
         throw new Error("Network response was not ok");
       }
       const Song = allMusic.find(data => data.song_id === song_id);
+      OnplaylistSong.push(Song)
       const Personal_artist_list = `<div class="box-music-list" id="box-music-list${Song.song_id}" >
                                               <a href="#" class="box-music-list-btn"  box-index="${i + 1}"></a>
                                               <div class="title-of-song">
@@ -1256,6 +1260,121 @@ function addSongToPlaylist(playlist_id, song_id, indexLenth) { //function ที
       alert("There was a problem fetching InsertPlaylistSong data.");
     });
 }
+function addSongToPrivatePlaylist(playlist_id, song_id, indexLenth) { //function ที่ใช้ในการ addเพลง ลงไปใน Playlist จำเป็นต้องส่งค่า playlist_id , song_id และ จำนวนเพลงใน playlist นั้นด้วย indexLenth
+  fetch("../API/InsertPlaylistSong.php", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      playlist_id: playlist_id,
+      song_id: song_id,
+    }),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const Song = allMusic.find(data => data.song_id === song_id);
+      OnplaylistSong.push(Song);
+      const Personal_artist_list = `<div class="box-music-list" id="box-music-list${Song.song_id}" >
+                                              <a href="#" class="box-music-list-btn"  box-index="${i + 1}"></a>
+                                              <div class="title-of-song">
+                                                  <div class="playing" id="PlayBtnOnPlaylist${Song.song_id}">
+                                                    <i class="ri-play-fill"></i>
+                                                  </div>
+                                                  <span class="index">${indexLenth + 1}</span>
+                                                  <img src="../img_song/${Song.img}" alt="">
+                                                  <div class="name-song">
+                                                      <span>${Song.name}</span>
+                                                      <span class="artist">${Song.artist}</span>
+                                                  </div>
+                                              </div>
+                                              <div class="Date-add-on-list">
+                                                <span>5 day ago</span>
+                                              </div>
+                                              <div class="duration-of-song">
+                                                  <label class="container-music" id="heart_list${Song.song_id}">
+                                                      <input type="checkbox" id="heart_on_check">
+                                                      <div class="checkmark">
+                                                          <svg viewBox="0 0 256 256">
+                                                              <rect fill="none" height="256" width="256"></rect>
+                                                              <path d="M224.6,51.9a59.5,59.5,0,0,0-43-19.9,60.5,60.5,0,0,0-44,17.6L128,59.1l-7.5-7.4C97.2,28.3,59.2,26.3,35.9,47.4a59.9,59.9,0,0,0-2.3,87l83.1,83.1a15.9,15.9,0,0,0,22.6,0l81-81C243.7,113.2,245.6,75.2,224.6,51.9Z" stroke-width="20px" stroke="#FFF" fill="none"></path>
+                                                          </svg>
+                                                      </div>
+                                                  </label>
+                                                  <span id="SONG${Song.song_id}" class="duration"></span>
+                                                  <audio class="SONG${Song.song_id}" src="../music/${Song.src}"></audio>
+                                                  <div class = "DeleteFromPlaylist" SongID="${Song.song_id}" id="DeleteFromPlaylist${Song.song_id}" trigger-button data-target ="Delete-song-popup-onlist">
+                                                      <a><i class="ri-close-line"></i></a>
+                                                  </div>
+                                              </div>
+                                          </div>`;
+
+      // เพิ่ม HTML สำหรับแต่ละเพลงลงใน all_music_list
+      all_music_list.insertAdjacentHTML("beforeend", Personal_artist_list);
+      //-------------------------------------------------------------------------------------------------
+
+      let liAudioTag = all_music_list.querySelector(`.SONG${Song.song_id}`);
+      let liAudioDuration = all_music_list.querySelector(`#SONG${Song.song_id}`);
+      // console.log(liAudioTag);
+      liAudioTag.addEventListener("loadeddata", () => {
+        let audioDuration = liAudioTag.duration;
+        let totalMin = Math.floor(audioDuration / 60);
+        let totalSec = Math.floor(audioDuration % 60);
+
+        if (totalSec < 10) {
+          totalSec = `0${totalSec}`;
+        }
+
+        liAudioDuration.innerText = `${totalMin}:${totalSec}`;
+      });
+
+      const heart_list = document.getElementById(`heart_list${Song.song_id}`);
+      const inside_heart_list = heart_list.querySelector('#heart_on_check');
+      const PlayBtnOnPlaylist = document.getElementById(`PlayBtnOnPlaylist${Song.song_id}`);
+      const DeleteFromPlaylist = document.getElementById(`DeleteFromPlaylist${Song.song_id}`);
+      heart_list.style.opacity = '0';
+      PlayBtnOnPlaylist.style.opacity = '0';
+      DeleteFromPlaylist.style.opacity = '0';
+      inside_heart_list.addEventListener('change', function () {
+        if (this.checked) {
+          heart_list.style.opacity = '1';
+        } else {
+          heart_list.style.opacity = '0';
+        }
+      });
+      const boxMusicList = document.querySelector(`#box-music-list${Song.song_id}`);
+      boxMusicList.addEventListener('mouseover', function () { // เมื่อนำเมาส์ไป hover ที่ boxMusicList
+        const insideHeartList = heart_list.querySelector('#heart_on_check');
+        if (!insideHeartList.checked) {
+          heart_list.style.opacity = '1';
+        }
+        if (!PlayBtnOnPlaylist.classList.contains("showState")) {
+          PlayBtnOnPlaylist.style.opacity = '1';
+        }
+        DeleteFromPlaylist.style.opacity = '1';
+      });
+      boxMusicList.addEventListener('mouseout', function () {  // เมื่อนำเมาส์ออกไป ที่ boxMusicList
+        const insideHeartList = heart_list.querySelector('#heart_on_check');
+        if (!insideHeartList.checked) {
+          heart_list.style.opacity = '0';
+        }
+        if (!PlayBtnOnPlaylist.classList.contains("showState")) {
+          PlayBtnOnPlaylist.style.opacity = '0';
+        }
+        DeleteFromPlaylist.style.opacity = '0';
+      });
+
+      fetchAddSongToPrivatePlaylist(playlist_id);
+      updateDateandTimeMusicPerOne(Song, indexLenth);
+      triggerOpen();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      alert("There was a problem fetching InsertPlaylistSong data.");
+    });
+}
 function DeletePlaylistSong(playlist_id, song_id) {
   const formData = new FormData(); // สร้าง ไว้เพื่อส่งข้อมูลตอนที่กำลัง fetch API
   formData.append('playlist_id', playlist_id);
@@ -1287,7 +1406,9 @@ function DeletePlaylist(playlist_id) {
         throw new Error("Network response was not ok on DeletePlaylist")
       }
       response.text();
+      
       fetchInitialDataCategory();
+      fetchInitialPrivateUserPlaylist(UserID);
       BTN_HOME.click();
       close_Delete_playlist_popup();
     })
@@ -1572,7 +1693,6 @@ function sortedSongsPrivatePlaylist(SongOfPlaylist, playlist_id_local) {// ก�
     Btn_follow_Midia();
   }
   const box_music_list_btn = all_music_list.querySelectorAll('.box-music-list-btn'); // all_music_list เคยประกาศใว้แล้วที่ script line 759
-  console.log(box_music_list_btn)
   box_music_list_btn.forEach((content, i) => {
     content.addEventListener('click', () => {
       resetActions();
@@ -1583,12 +1703,14 @@ function sortedSongsPrivatePlaylist(SongOfPlaylist, playlist_id_local) {// ก�
       const actions_playlist = document.querySelector(`.actions[actions_Playlist_id="${playlist_id_local}"]`); // ใช้ตัวแปรนี้เพื่อแทนปุ่มกดplay ที่อยู่ส่วน Hover playlist
       ClassListofButtonplaylist = ''; // ต้องใช้เพื่อเช็คจะส่ง  actions_playlist เพื่อใช้งาน function ToggleBtn_Allactions ที่อยู่ใน playPauseBtn
       ClassListofButtonplaylist = actions_playlist;
+
       OnplaylistSong = []; // ต้องเคลียร์ array ก่อน push ค่าเข้าไป
       const sortedSongs = SongOfPlaylist.map(playlistItem => {  // นำ song_id ที่อยู่ใน SongOfPlaylist  เพื่อกรอง array Allmusic ให้มีแค่ เพลงของ playlistนั้นๆ 
         const foundSong = allMusic.find(song => song.song_id === playlistItem.song_id); //และที่ต้องใช้ Map เนื่องจากมัน Return ค่ากลับมาได้
         OnplaylistSong.push(foundSong); // ต้องเก็บใว้ใน Array ที่เป็น global
         return foundSong;
       });
+      console.log(OnplaylistSong)
       if (playlist_id_local !== NowPlayingListSong) {
         Taglist.innerHTML = ''; // clear taglist เพื่อ Requeue ใหม่
         NowPlayingListSong = [];// ต้องเคลียร์ array ก่อน push ค่าเข้าไป
@@ -2107,7 +2229,6 @@ async function fetchAddSongToPrivatePlaylist(playlist_id) {//เหมือน�
         return false;
       });
 
-      sortedSongsPrivatePlaylist(SongOfPlaylist, playlist_id);
 
       insert_song.innerHTML = ''; // clear ข้อมูลก่อน
       let insert_song_var = `<div class="insert_song-header">
@@ -2128,6 +2249,8 @@ async function fetchAddSongToPrivatePlaylist(playlist_id) {//เหมือน�
                               <div class="insert_song-main_wrapper">
                               </div>`;
       insert_song.insertAdjacentHTML("beforeend", insert_song_var);
+      
+      sortedSongsPrivatePlaylist(SongOfPlaylist, playlist_id);
         
         // ----------------------------------------------
         // ส่วนที่ใช้ในการทำ Search เพลง และ Add เพลง เข้ามา 
@@ -2171,7 +2294,7 @@ async function fetchAddSongToPrivatePlaylist(playlist_id) {//เหมือน�
           const content_add_song_btn = document.querySelectorAll(".content-add-song-btn");
           content_add_song_btn.forEach(add => {
             add.addEventListener('click', () => {
-              addSongToPlaylist(playlist_id, add.getAttribute("song_id"), (SongOfPlaylist.length))
+              addSongToPrivatePlaylist(playlist_id,  add.getAttribute("song_id"), (SongOfPlaylist.length))
             })
           });
           const DeleteFromPlaylist = document.querySelectorAll('.DeleteFromPlaylist')
@@ -2283,6 +2406,7 @@ function fetchInitialPrivateUserPlaylist(UserID) { //  function ที่ใช�
         const listitem_front = document.querySelectorAll('.listitem');
         listitem_front.forEach((content, index) => {
           content.addEventListener("click", (event) => {
+            OnplaylistSong = []; // ต้องเคลียร์ array ก่อน push ค่าเข้าไป
             event.preventDefault();
             let playlist_id_local = content.getAttribute("playlist_id");
 
@@ -2378,7 +2502,8 @@ function fetchInitialPrivateUserPlaylist(UserID) { //  function ที่ใช�
                                               </form>`;
                 Delete_confirm.insertAdjacentHTML("beforeend", Delete_confirm_var)
                 const delete_song_playlist = document.querySelector('.delete-song-playlist');
-                delete_song_playlist.addEventListener('click', () => {
+                delete_song_playlist.addEventListener('click', (e) => {
+                  e.preventDefault();
                   DeletePlaylist(playlist_id_local) // ส่งค่าไปเมื่อจะทำการลบ Playlist นั้นๆ
                 });
 
@@ -2410,19 +2535,22 @@ function fetchInitialPrivateUserPlaylist(UserID) { //  function ที่ใช�
                   isSpecialCondition = false; // ปิดการใช้งานในเงื่อนไขของ Artist
                   isPlaylistCondition = true;// เปิดการใช้งานในเงื่อนไขของ Playlist
                   isPrivatePlaylistCondition = true;// isPrivatePlaylistConditionเป็นเงื่อนไขที่ใช้แยก playlist ระหว่าง Admin และ User
-                  OnplaylistSong = []; // ต้องเคลียร์ array ก่อน push ค่าเข้าไป
+                  if(SongOfPlaylist.length > 0){ // ถ้าไม่เจอ ข้อมูลก็ไม่ต้องเครียร์
+                    OnplaylistSong = []; // ต้องเคลียร์ array ก่อน push ค่าเข้าไป
+                  }
                   const sortedSongs = SongOfPlaylist.map(playlistItem => {  // นำ song_id ที่อยู่ใน SongOfPlaylist  เพื่อกรอง array Allmusic ให้มีแค่ เพลงของ playlistนั้นๆ 
                     const foundSong = allMusic.find(song => song.song_id === playlistItem.song_id); //และที่ต้องใช้ Map เนื่องจากมัน Return ค่ากลับมาได้
                     OnplaylistSong.push(foundSong); // ต้องเก็บใว้ใน Array ที่เป็น global
                     return foundSong;
                   });
+                  console.log(OnplaylistSong)
                   let countSong = 1;
                   musicIndex = 1; // set music เป็น 1 ตามarray ที่เรากรองมา
                   if (playlist_id_local !== NowPlayingListSong) {
                     Taglist.innerHTML = '';
                     NowPlayingListSong = [];// ต้องเคลียร์ array ก่อน push ค่าเข้าไป
                     NowPlayingListSong = playlist_id_local; // ใช้เพื่อนำมาเช็คว่า playlistไหนกำลังเล่นอยู่
-                    sortedSongs.forEach((music, i) => {
+                    OnplaylistSong.forEach((music, i) => {
                       let boxlist = `<div class="box-list" box-index="${countSong}" artist_name="${music.artist}" playlist_id="${playlist_id_local}"> 
                                                   <a href="#" class="for-select"></a>
                                                   <audio class="${music.src}" id="NOW${music.src}" src="../music/${music.src}"></audio>
