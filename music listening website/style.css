@@ -169,14 +169,17 @@ form .password a:hover{
 .main{
     flex: 1 0 33.3333%;
 }
-
+.main .UserEmail,
+.main  .header_info{
+    display: flex;
+    justify-content: space-between;
+}
 .main > h1{
     line-height: 2;
 }
 .main form{
     display: flex;
     flex-direction: column;
-    gap: 30px;
 }
 
 .main img{
@@ -196,6 +199,7 @@ form input{
     padding: 0 20px;
     line-height: 60px;
     border-radius: 10px;
+    margin-bottom: 20px;
 }
 
 input::placeholder{

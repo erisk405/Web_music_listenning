@@ -1021,7 +1021,8 @@ function fetchInitialPermalink() { /// function ที่ใช้เพื่�
                                     </form>`;
           Delete_confirm.insertAdjacentHTML("beforeend", Delete_confirm_var)
           const delete_song_playlist = document.querySelector('.delete-song-playlist');
-          delete_song_playlist.addEventListener('click', () => {
+          delete_song_playlist.addEventListener('click', (e) => {
+            e.preventDefault();
             DeletePlaylist(playlist_id_local) // ส่งค่าไปเมื่อจะทำการลบ Playlist นั้นๆ
           });
 

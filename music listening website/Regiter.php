@@ -22,26 +22,27 @@
                 </div>
                 <div class="main">
                     <h1>Register</h1>
-                    <p>Email</p>
-                    <form action="signup.php" method="POST">
+                    <p class= "UserEmail">Email <span class="notice" id="notice_email"></span></p>
+                    <form action="signup.php" method="POST" id="registrationForm">
                         <p>
-                            <input type="email" placeholder="Your email address" name="email">
+                            <input id="UserEmail" type="email" placeholder="Your email address" name="email">
                         </p>
                         <p class="Username">
-                            Username
-                            <input type="text" placeholder="This Uname will appear on your profile" name="user">
+                            <div class="header_info">Username <span class="notice" id="notice_Uname"></span></div>
+                            
+                            <input id="Username" type="text" placeholder="This Uname will appear on your profile" name="user">
                         </p>
                         <p class="password">
-                            Password
-                            <input type="password" placeholder="Password" name="pass">
+                            <div class="header_info">Password <span class="notice" id="notice_Password"></span></div>
+                            <input id="password" type="password" placeholder="Password" name="pass">
                         </p>
                         <p class="password">
-                            Confirm-Password
-                            <input type="password" placeholder="Confirm-Password" name="cpass">
+                            <div class="header_info">Confirm-Password <span class="notice" id="notice_CPassword"></span></div>
+                            <input id ="Cpassword" type="password" placeholder="Confirm-Password" name="cpass">
                             <a href="#">Recovery password</a>
                         </p>
                         <p>
-                            <input type="submit" class="submit" value="Sign In" name="submit">
+                            <input type="submit" id="SendData" class="submit" value="Sign In" name="submit">
                         </p>
                     </form>
                     <div class="option">
@@ -58,5 +59,6 @@
             </div>
         </div>
     </div>
+    <script src="./Register.js"></script>
 </body>
 </html>
