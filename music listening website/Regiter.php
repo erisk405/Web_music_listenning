@@ -22,6 +22,7 @@
                 </div>
                 <div class="main">
                     <h1>Register</h1>
+                    <h3 href="#" class ="alert_notict"></h3>
                     <p class= "UserEmail">Email <span class="notice" id="notice_email"></span></p>
                     <form action="signup.php" method="POST" id="registrationForm">
                         <p>
@@ -39,7 +40,6 @@
                         <p class="password">
                             <div class="header_info">Confirm-Password <span class="notice" id="notice_CPassword"></span></div>
                             <input id ="Cpassword" type="password" placeholder="Confirm-Password" name="cpass">
-                            <a href="#">Recovery password</a>
                         </p>
                         <p>
                             <input type="submit" id="SendData" class="submit" value="Sign In" name="submit">

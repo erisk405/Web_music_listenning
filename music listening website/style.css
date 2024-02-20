@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
-
 :root{
     --font-family : 'Poppins', sans-serif;
     --primary-color:#4460f1;
@@ -62,6 +61,7 @@ h1{
     margin: 0 auto;
     background-color: var(--background-color);
     z-index: 1000;
+    overflow: hidden;
 }
 
 .container > h2{
@@ -154,7 +154,7 @@ form .password a:hover{
 .hero-regis img{
     position: absolute;
     width: 100%;
-    height: 110%;
+    height: 112%;
     object-fit: cover;
     left: -70px;
     top: -40px;

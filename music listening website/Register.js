@@ -17,7 +17,7 @@ fetch("./API_user.php")
             const email = e.target.value;
             if (!validateEmail(email)) {
                 notice_email.style.color = "red";
-                notice_email.innerHTML = "Incorrect";
+                notice_email.innerHTML = "กรอกให้ถูกต้องตาม format : xxx@xxx.xxx";
             }
             if (validateEmail(email)) {
                 notice_email.style.color = "green";
@@ -38,11 +38,17 @@ fetch("./API_user.php")
 
         const Username = document.getElementById('Username');
         const notice_Uname = document.getElementById('notice_Uname');
+        Username.addEventListener('keydown', function (e) {
+            if (e.key === " ") {
+                e.preventDefault();
+            }
+        });
+        
         Username.addEventListener('keyup', (e) => {
-            const Uname = e.target.value;
+            const Uname = e.target.value.trim();
             if (!validateUsername(Uname)) {
                 notice_Uname.style.color = "red";
-                notice_Uname.innerHTML = "Incorrect";
+                notice_Uname.innerHTML = "ต้องมีอย่างน้อย 6 ตัวขึ้นไป A-Z,0-9";
             }
             if (validateUsername(Uname)) {
                 notice_Uname.style.color = "green";
@@ -76,7 +82,7 @@ passwordInput.addEventListener('input', function (e) {
     const password = e.target.value.trim();
     if (!validatePassword(password)) {
         noticePassword.style.color = "red";
-        noticePassword.innerHTML = "Incorrect";
+        noticePassword.innerHTML = "ต้องมีอย่างน้อย 9 ตัว A-Z,0-9";
     } else {
         noticePassword.style.color = "green";
         noticePassword.innerHTML = "Correct";
@@ -124,6 +130,7 @@ SendData.addEventListener('click', function (event) {
     if (!isEmailCorrect || !isUsernameCorrect || !isPasswordCorrect || !isConfirmPasswordMatch ||!isDuplicateEmail ||!isDuplicateUsername) {
         event.preventDefault(); // ยกเลิกการทำงานปกติของปุ่ม
         // แสดงข้อความเตือนให้ผู้ใช้ทราบว่ามีข้อมูลที่ไม่ถูกต้อง
-        alert("กรอกข้อมูลให้ทุกตัวเป็น Currect ก่อน.");
+        document.querySelector('.alert_notict').style.color = "red";
+        document.querySelector('.alert_notict').innerHTML = "Fill in all information as required.";
     }
 });

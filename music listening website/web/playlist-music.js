@@ -919,7 +919,9 @@ async function fetchAddSongPlaylist(playlist_id) {//เหมือนกับ 
                                   </div>
                               </div>
                               <div class="insert_song-main_wrapper">
-                              </div>`;
+                              </div>
+                              <h2 class="notictOfsearch"> </h2>
+                              `;
         insert_song.insertAdjacentHTML("beforeend", insert_song_var);
 
         
@@ -929,6 +931,7 @@ async function fetchAddSongPlaylist(playlist_id) {//เหมือนกับ 
         const MusicOfSort = [...new Set(sortedSongs.map((item) => { return item }))] //... ใช้เพื่อแปลง Set กลับเป็น Array
         const SearchOfSong = document.getElementById('Search_Song');
         const insert_song_main_wrapper = document.querySelector('.insert_song-main_wrapper');
+        const notictOfsearch = document.querySelector('.notictOfsearch');
         SearchOfSong.addEventListener('keyup', (e) => {
           const searchData = e.target.value.toLowerCase();
           const filterData = MusicOfSort.filter((item) => {
@@ -936,6 +939,13 @@ async function fetchAddSongPlaylist(playlist_id) {//เหมือนกับ 
               (item.name && item.name.toLowerCase().includes(searchData)) || (item.artist && item.artist.toLowerCase().includes(searchData))
             )
           })
+          if(filterData.length == 0){
+            notictOfsearch.style.display ="flex";
+            notictOfsearch.style.justifyContent = "Center";
+            notictOfsearch.innerHTML = "Song was not found. !!"
+          }else{
+            notictOfsearch.innerHTML = "";
+          }
           displayItem(filterData)
         });
 
