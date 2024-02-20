@@ -458,7 +458,7 @@ Edit_file_img_song.addEventListener('change', function () {
 // ----------------------------------------------------------------
 
 document.addEventListener('DOMContentLoaded', function() {
-  
+  let isValidateName = false;
   const addButton = document.querySelector('.add-song');
   const form = document.querySelector('.inp-group');
   let songCount = 1; // นับจำนวนเพลงที่เพิ่มเข้ามา เพื่อเป็นตัวแปรใว้สร้างชื่อ"id"แต่ละตัว ในการจำแนกแต่ละcontent
@@ -480,8 +480,8 @@ document.addEventListener('DOMContentLoaded', function() {
                   <input id="file-img-song-${songCount}" type="file" name="file-img-songs[]" required>
               </label>
               <div> 
-                  <span>Name</span>
-                  <input type="text" placeholder="Music name" name="songs-name[]" required>
+                  <span class="title_on_upload">Name <span class="notict_Name" id="notict_Name${songCount}"></span></span>
+                  <input type="text" placeholder="Music name" id="ADD_Song_name${songCount}" name="songs-name[]" required>
                   <span>File mp3 </span>
                   <div class="mp3-only">
                       <input type="file" class="song-file" id="for-file-song-name-${songCount}" name="file-song-name[]" required> 
@@ -535,9 +535,67 @@ document.addEventListener('DOMContentLoaded', function() {
           wrapperToDelete.remove();
         }
       });
+      
+
+      // -------------------------------------------
+      // ในส่วนของการ Check Validate Data 
+      // -------------------------------------------
+      const ADD_Song_name = document.querySelector('#ADD_Song_name'+songCount); 
+      console.log(ADD_Song_name)
+      const notict_Name = document.querySelector('#notict_Name'+songCount);
+      ADD_Song_name.addEventListener('keyup', (e) => {
+        const searchData = e.target.value.toLowerCase();
+        const isDuplicate = ArtistMusic.some(Artist => Artist.artist_name.toLowerCase() === searchData);
+        if (!validateArtistName(searchData)) {
+          isValidateName = false
+          notict_Name.style.color = "red";
+          notict_Name.innerHTML = "ไม่รองรับตัวอักขระพิเศษ และ ห้ามเกิน50ตัว";
+        } else {
+          isValidateName = true
+          notict_Name.innerHTML = "";
+        }
+        if (isDuplicate) {
+          isValidateName = false
+          notict_Name.style.color = "red";
+          notict_Name.innerHTML = "DuplicateData";
+        }
+    });
+    
+
+
+ 
   });
 });
 
+// -------------------------------------------
+// ในส่วนของการ Check Validate Data 
+// -------------------------------------------
+    const Add_song_footer = document.querySelector('.Add-song-footer');
+    const ADD_Song_name = document.querySelector('#ADD_Song_name'); 
+    const notict_Name = document.querySelector('#notict_Name');
+    console.log(notict_Name)
+    ADD_Song_name.addEventListener('keyup', (e) => {
+      const searchData = e.target.value.toLowerCase();
+      const isDuplicate = ArtistMusic.some(Artist => Artist.artist_name.toLowerCase() === searchData);
+      if (!validateArtistName(searchData)) {
+        isValidateName = false
+        notict_Name.style.color = "red";
+        notict_Name.innerHTML = "ไม่รองรับตัวอักขระพิเศษ และ ห้ามเกิน50ตัว";
+      } else {
+        notict_Name.innerHTML = "";
+        isValidateName = true
+      }
+      if (isDuplicate) {
+        isValidateName = false
+        notict_Name.style.color = "red";
+        notict_Name.innerHTML = "DuplicateData";
+      }
+    });
+
+function validateArtistName(searchData) {
+  var re = /^[A-Za-z0-9ก-๙ ]{1,50}$/;
+  return re.test(searchData);
+}
 
 function getRandomColor() {
   const letters = '0123456789ABCDEF';

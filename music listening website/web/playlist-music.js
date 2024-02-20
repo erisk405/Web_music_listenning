@@ -702,7 +702,7 @@ function fetchInitialDataCategory() { //function ที่ใช้ในกา�
             initSwiper();
             triggerOpen();
           }
-        })
+      })
         .catch(error => {
           console.error("Error:", error);
         });
@@ -716,6 +716,80 @@ function fetchInitialDataCategory() { //function ที่ใช้ในกา�
           addPlaylist(content.getAttribute("category_id")); // สร้างplaylist ตาม ID ที่กด 
         });
       });
+        // ----------------------------------------------------------------------
+        // function ที่ใช้ในการเปลี่ยนหน้า 1,2,3,..~
+        // paginationHOMEของ upload content  
+        // ----------------------------------------------------------------------
+      const main_site_right = document.querySelector('.main_site-right');
+      const ContentOfPagni = main_site_right.querySelectorAll('.content:not(.User)');
+      console.log(ContentOfPagni)
+      let thisPageHome = 1;
+      let limitHome = 3;
+        function loadItem_HOME() {
+          let beginGet = limitHome * (thisPageHome - 1);
+          let endGet = limitHome * thisPageHome - 1;
+          ContentOfPagni.forEach((item, key) => {
+            if (key >= beginGet && key <= endGet) {
+              item.style.display = 'flex';
+              item.style.flexDirection = 'column';
+              item.style.gap = "24px";
+            } else {
+              item.style.display = 'none';
+            }
+          })
+          listPageHOME();
+        }
+        loadItem_HOME();
+
+        function listPageHOME() {
+          let count = Math.ceil(ContentOfPagni.length / limitHome);
+          document.querySelector('.pagination-container_Home').innerHTML = '';
+
+          if (thisPageHome != 1) {
+            let prev = document.createElement('li');
+            prev.innerText = 'PREV';
+            prev.addEventListener('click', function () {
+              changePage(thisPageHome - 1);
+            });
+            document.querySelector('.pagination-container_Home').appendChild(prev);
+          }
+
+          for (let i = 1; i <= count; i++) {
+            let newPageHOME = document.createElement('li');
+            newPageHOME.innerText = i;
+            if (i === thisPageHome) {
+              newPageHOME.classList.add('active');
+            }
+            newPageHOME.addEventListener('click', function () {
+              changePage(i);
+            });
+            document.querySelector('.pagination-container_Home').appendChild(newPageHOME);
+          }
+
+          if (thisPageHome != count) {
+            let next = document.createElement('li');
+            next.innerText = 'NEXT';
+            next.addEventListener('click', function () {
+              changePage(thisPageHome + 1);
+            });
+            document.querySelector('.pagination-container_Home').appendChild(next);
+          }
+
+          const paginationHOMEItems = document.querySelectorAll('.pagination-container_Home li');
+          paginationHOMEItems.forEach(item => {
+            item.addEventListener('click', function () {
+              paginationHOMEItems.forEach(element => {
+                element.classList.remove('active');
+              });
+              this.classList.add('active');
+            });
+          });
+        }
+
+        function changePage(i) {
+          thisPageHome = i;
+          loadItem_HOME();
+        }
     })
     .catch((error) => {
       console.error("Error:", error);

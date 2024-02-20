@@ -281,6 +281,8 @@ while($row = $result_song -> fetch_assoc()){
                                     </div>
                                 </div>
                             </div>
+                            <div class="pagination-container_Home">
+                            </div>
                         </div>
                     </div>
                     <div class="insite_the_playlist">
@@ -574,8 +576,8 @@ while($row = $result_song -> fetch_assoc()){
                                    <input id="file-img-song-1" type="file" name="file-img-songs[]" required>
                             </label>
                             <div> 
-                                <span>Name</span>
-                                <input type="text" placeholder="Music name" name="songs-name[]" required>
+                                <span class="title_on_upload">Name <span class="notict_Name" id="notict_Name"></span></span>
+                                <input type="text" placeholder="Music name" id="ADD_Song_name" name="songs-name[]" required>
                                 <span>File mp3 </span>
                                 <div class="mp3-only">
                                     <input type="file" class="song-file" id="for-file-song-name" name="file-song-name[]" required> 

@@ -910,7 +910,7 @@ const displayArtistItem = (itemOfSearch) => {
 
     // เพิ่มตัวแปรเพื่อเก็บข้อมูลศิลปิน
     requiredFields.forEach(function (field) {
-      if (!field.value) {
+      if (!field.value || !isValidateName) {
         isValid = false;
         required_title.innerHTML = "* Please fill out all information completely.";
         // แสดงข้อความเตือนหรือการแสดงสถานะที่นี่ (ตัวอย่างเช่น console.log())
@@ -1422,9 +1422,10 @@ const displayArtistItem = (itemOfSearch) => {
 
   triggerOpen();
 };
-
-
 displayArtistItem(ArtistOfSort);
+
+
+
 
 
 // ------------------------------------------------------------------
@@ -1452,3 +1453,5 @@ function triggerOpen() {
   };
 }
 triggerOpen();
+
+
