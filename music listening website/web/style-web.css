@@ -162,7 +162,15 @@ h1 {
   font-weight: 700;
 }
 
-
+.header-left .Search{
+  display: none;
+}
+.header-left .home{
+  font-size: 30px;
+}
+.header-left .home span{
+  font-size: 20px;
+}
 
 
 /* ------------------------- */
@@ -263,7 +271,8 @@ h1 {
 
 .section-library,
 .container-library {
-  display: flex;
+  display: none;
+  /* display: flex; */
   gap: 12px;
   margin-bottom: 10px;
 }

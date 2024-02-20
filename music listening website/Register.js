@@ -1,3 +1,5 @@
+let isDuplicateEmail = false;
+let isDuplicateUsername = false;
 fetch("./API_user.php")
     .then((Response) => {
         if (!Response.ok) {
@@ -20,11 +22,13 @@ fetch("./API_user.php")
             if (validateEmail(email)) {
                 notice_email.style.color = "green";
                 notice_email.innerHTML = "correct";
+                isDuplicateEmail = true;
             }
             const isDuplicate = data_user.some(user => user.email === email);
             if (isDuplicate) {
                 notice_email.style.color = "red";
                 notice_email.innerHTML = "This email is already taken";
+                isDuplicateEmail=false;
             }
         });
 
@@ -43,11 +47,13 @@ fetch("./API_user.php")
             if (validateUsername(Uname)) {
                 notice_Uname.style.color = "green";
                 notice_Uname.innerHTML = "correct";
+                isDuplicateUsername = true
             }
             const isDuplicate = data_user.some(user => user.username === Uname);
             if (isDuplicate) {
                 notice_Uname.style.color = "red";
                 notice_Uname.innerHTML = "This Username is already taken";
+                isDuplicateUsername=false;
             }
         });
 
@@ -115,7 +121,7 @@ SendData.addEventListener('click', function (event) {
     const isConfirmPasswordMatch = confirmInput.value.trim() === passwordInput.value.trim();
 
     // ถ้าข้อมูลไม่ถูกต้อง หรือยังไม่ได้ตรวจสอบ
-    if (!isEmailCorrect || !isUsernameCorrect || !isPasswordCorrect || !isConfirmPasswordMatch) {
+    if (!isEmailCorrect || !isUsernameCorrect || !isPasswordCorrect || !isConfirmPasswordMatch ||!isDuplicateEmail ||!isDuplicateUsername) {
         event.preventDefault(); // ยกเลิกการทำงานปกติของปุ่ม
         // แสดงข้อความเตือนให้ผู้ใช้ทราบว่ามีข้อมูลที่ไม่ถูกต้อง
         alert("กรอกข้อมูลให้ทุกตัวเป็น Currect ก่อน.");
