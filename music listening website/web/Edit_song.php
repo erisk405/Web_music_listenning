@@ -97,4 +97,19 @@
         }
         updateNameSong($conn, $Edit_song_name, $song_on_edit);
     }
+
+    if(isset($_POST) && isset( $_POST['selectToChangeArtist'])){
+        $selectToChangeArtist  = $_POST['selectToChangeArtist'];
+        $song_on_edit = $_POST['song-id'];
+
+        if($selectToChangeArtist !== "NoChange"){
+            $sql = "UPDATE songs SET artist_id  = '$selectToChangeArtist' WHERE songs.song_id = '$song_on_edit'";
+            $result = $conn->query($sql);
+            if($result){
+                echo "Update success artist";
+            }else{
+                echo "Error artist change";
+            }
+        }
+    }
 ?>

@@ -7,7 +7,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $fileImgSongs = $_FILES['file-img-songs'];
         $fileNameSongs = $_FILES['file-song-name'];
         $artist = $_POST['id_artist'];
-        echo "artist:".$artist;
+        $selectToplaylists = $_POST['selectToplaylist'];
+        print_r($_POST['selectToplaylist']);
         // Loop ตามจำนวนข้อมูลที่ส่งมาแต่ละตัวใน array
         $dir_banner = "../img_song/";
         $dir_music = "../music/";
@@ -16,6 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $FileImgName = $fileImgSongs['name'][$i];
             $FileImgSize = $fileImgSongs['size'][$i];
             $FileNamesong = $fileNameSongs['name'][$i];
+            $selectToplaylist =  $selectToplaylists[$i];
             // ทำการใช้ $songName, $fileName, $fileSize ตามที่ต้องการ เช่นบันทึกลงฐานข้อมูล หรือประมวลผลเพิ่มเติม
 
             // เช่น แสดงข้อมูลออกมาเป็นตัวอย่าง
@@ -23,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "FileImgName: " . $FileImgName . "<br>";
             echo "FileImgSize: " . $FileImgSize . "<br>";
             echo "FileNamesong: " . $FileNamesong . "<br>";
-
+            echo "selectToplaylist " . $selectToplaylist  . "<br>";
             if (!file_exists($dir_banner.$FileImgName)){
                 if (move_uploaded_file($_FILES["file-img-songs"]["tmp_name"][$i], $dir_banner.$FileImgName)) {
                     echo "The file ". $FileImgName. " has been uploaded.";
@@ -53,7 +55,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $sql = "INSERT INTO songs(artist_id,song_title,Songs_filename,Songs_imgfilename) VALUES('$artist','$songName','$FileNamesong','$FileImgName')";
             $sql = mysqli_query($conn,$sql);
             if($sql){
-                echo "asdsad";
+                echo "UploadSuccess";
+                $song_id = mysqli_insert_id($conn);
+                if( $selectToplaylist !== "NotUse"){
+                    $sql_playlist = "INSERT INTO playlist_song(playlist_id,song_id) VALUES('$selectToplaylist' , '$song_id')";
+                    $sql_playlist = mysqli_query($conn, $sql_playlist);
+                }
             }
             else{
                 echo "error";

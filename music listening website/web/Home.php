@@ -575,7 +575,7 @@ while($row = $result_song -> fetch_assoc()){
                                 </div>
                                    <input id="file-img-song-1" type="file" name="file-img-songs[]" required>
                             </label>
-                            <div> 
+                            <div class="wrapper_on_upload"> 
                                 <span class="title_on_upload">Name <span class="notict_Name" id="notict_Name"></span></span>
                                 <input type="text" placeholder="Music name" id="ADD_Song_name" name="songs-name[]" required>
                                 <span>File mp3 </span>
@@ -584,6 +584,12 @@ while($row = $result_song -> fetch_assoc()){
                                     <label for="for-file-song-name" class="for-edit-file-input" >
                                         Select
                                     </label>
+                                </div>
+                                <div class="selectToplaylist">
+                                    <span>Select To playlist</span>
+                                    <select name="selectToplaylist[]" id="selectToplaylist">
+                                        <option value="">playlist1</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="delete-content-song" id="delete-content-song-1">
@@ -692,6 +698,12 @@ while($row = $result_song -> fetch_assoc()){
                                     <label for="Edit-file-song-name" class="for-edit-file-input" >
                                         Select
                                     </label>
+                                </div>
+                                <div class="selectToChangeArtist">
+                                    <span>Select To Artist</span>
+                                    <select name="selectToChangeArtist" id="selectToChangeArtist">
+                                        <option value="">Artist</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>              

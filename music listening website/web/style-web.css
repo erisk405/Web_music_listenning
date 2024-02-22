@@ -2353,14 +2353,20 @@ footer {
 .container-Add-song .custum-file-upload {
   position: relative;
   display: flex;
-  width: 150px;
-  height: 150px;
   border: none;
   box-shadow: 1px -1px 57px -13px rgba(0, 0, 0, 0.75);
   background-color: #282828;
-  width: 165px;
-  height: 155px;
+  width: 230px;
+  height: 230px;
   border-radius: 10px;
+}
+.container-Add-song .selectToplaylist select,
+.selectToChangeArtist select{
+  padding: 10px 5px;
+  border: none;
+  outline: none;
+  background-color: rgb(26, 26, 26);
+  color: white;
 }
 
 .container-Add-song input[type="text"] {
@@ -2368,7 +2374,7 @@ footer {
   outline: none;
   color: white;
   background-color: var(--in-button);
-  padding: 5px 10px;
+  padding: 10px 10px;
 }
 
 .container-Add-song .custum-file-upload .icon svg {
@@ -2721,7 +2727,7 @@ footer {
   transform: translate(-50%, -50%);
   background-color: var(--backgourd-popup);
   border-radius: 10px;
-  width: 550px;
+  width: 650px;
   padding: 25px;
   z-index: 999;
 }
@@ -2745,8 +2751,8 @@ footer {
   border: none;
   box-shadow: 1px -1px 57px -13px rgba(0, 0, 0, 0.75);
   background-color: #282828;
-  width: 165px;
-  height: 145px;
+  width: 220px;
+  height: 220px;
   border-radius: unset;
 }
 .Edit-song-popup .Edit-song-main .wraper-button {
@@ -2785,6 +2791,7 @@ footer {
   padding: 8px 0;
   color: gray;
 }
+
 .edit-mp3-only .for-edit-file-input,
 .mp3-only .for-edit-file-input {
   position: absolute;
@@ -2801,14 +2808,20 @@ footer {
   width: 104px;
   z-index: 10;
 }
+
 .Edit-song-main .custum-file-upload {
   position: relative;
   width: 100%;
 }
+
 .Edit-song-main .custum-file-upload img {
   position: absolute;
-  height: 150px;
-  width: 150px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%; 
+  height: 100%; 
   object-fit: cover;
   vertical-align: middle;
 }

@@ -187,7 +187,6 @@ function fetchInitialDataArtist() { //เหมือนกับ fetchInitialDa
       return response.json();
     })
     .then((data) => {
-      console.log(data)
       if(data.length > 0){
         carousel_item_artist.innerHTML = '';
         data.forEach((item) => {

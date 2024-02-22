@@ -957,6 +957,9 @@ const displayArtistItem = (itemOfSearch) => {
   // ข้างล่างต่อไปนี้เหนื่อยมาก ขอพักก่อน เดี๋ยวมา commentต่อ ซึ่งมันผิดหลักการด้วยแต่จะไม่แก้โครงสร้างตรงนี้แล้ว ถือว่าเสียเวลากับตรงนี้ไป แล้วไปเริ่มอันใหม่เลย(ไม่แน่เลย~ น่าจะคิดมาให้ดีกว่านี้) 
   for_upload_content.forEach((content, index) => {
     content.addEventListener('click', () => {
+      
+      const insert_song = document.querySelector(".insert_song"); // ปิดส่วน search ที่ต้องการจะ add เพลงออก เพราะเป้น playlist artist
+      insert_song.style.display = "none";
 
       //ในส่วนนี้ไม่มีอะไร แค่เข้าถึง CSS ในการแก้ใขในเรื่อง permission ของ Admin ที่จะมองเห็น
       const nav_title_element = document.querySelector(".nav-title > .duration-time span");
@@ -1253,7 +1256,11 @@ const displayArtistItem = (itemOfSearch) => {
       const edit_song_button = document.querySelectorAll(".edit-song-button");
       const custum_Edit_song_upload = document.getElementById('custum-Edit-song-upload');
       const Edit_song_header = Edit_song_popup.querySelector('.Edit-song-header');
-      console.log(Edit_song_header);
+      const selectToChangeArtist = document.querySelector('#selectToChangeArtist');
+
+      
+
+
       edit_song_button.forEach(Edit_song => {
         Edit_song.addEventListener('click', () => {
           const image_edit_song = Edit_song_popup.querySelector('img');
@@ -1261,6 +1268,10 @@ const displayArtistItem = (itemOfSearch) => {
           const song_id_on_edit = Edit_song_popup.querySelector('.song-id-on-edit');
           const old_img_song = Edit_song_popup.querySelector('.old-img-song');
           const old_file_song = Edit_song_popup.querySelector('.old_file_song');
+          selectToChangeArtist.innerHTML = `<option value="NoChange">No Change</option>`;
+          ArtistMusic.forEach(contentArtist =>{
+            selectToChangeArtist.innerHTML += `<option value="${contentArtist.artist_id}">${contentArtist.artist_name}</option>`;
+          });
 
           if (image_edit_song) {
             image_edit_song.remove();
