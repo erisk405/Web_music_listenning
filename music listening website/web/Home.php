@@ -5,10 +5,6 @@ if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
     // ถ้าไม่มี session หรือ session เป็นค่าว่าง ให้ redirect กลับไปที่หน้า Login
     header("Location: ../index.php");
     exit();
-}elseif ($_SERVER['HTTP_REFERER'] != "http://localhost/music%20listening%20website/index.php") {
-    // ถ้าผู้ใช้ไม่ได้เข้ามาจากหน้า Index.php ให้ redirect กลับไปที่หน้า Index
-    header("Location: ../index.php");
-    exit();
 }
 
 $user_id = $_SESSION['user_id'];
