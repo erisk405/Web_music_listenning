@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/ece8ebff-2453-42fe-8756-0bae9605d999)A project is a clone spotify for Education , base on HTML CSS JS PHP and MySql. this website design clone of spotify but management of database and this project has small for my practict and have a Basic Operation 
+A project is a clone spotify for Education , base on HTML CSS JS PHP and MySql. this website design clone of spotify but management of database and this project has small for my practict and have a Basic Operation 
 
 1. Download and install Laragon
 2. Set User:root,Password:None/Blank,Port:3306
