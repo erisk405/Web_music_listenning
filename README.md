@@ -6,8 +6,6 @@ A project is a clone spotify for Education , base on HTML CSS JS PHP and MySql. 
 4. Store music listening website folder in www folder of laragon
 5. Start laragon server and set file path on URL localhost/music listening website/index.php
 
-user: Admin
-password : AA123456
 
 Sign in
 ![image](https://github.com/user-attachments/assets/cf9557e9-0a98-431b-8a5b-00c49b616dfc)
